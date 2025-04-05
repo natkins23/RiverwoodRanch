@@ -76,6 +76,7 @@ export const newsletterSubscriptions = pgTable("newsletter_subscriptions", {
   id: serial("id").primaryKey(),
   email: text("email").notNull().unique(),
   subscriptionDate: timestamp("subscription_date").notNull().defaultNow(),
+  joinEmailChain: boolean("join_email_chain").notNull().default(false),
 });
 
 export const insertNewsletterSchema = createInsertSchema(newsletterSubscriptions).omit({
