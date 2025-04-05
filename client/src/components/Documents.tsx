@@ -131,6 +131,38 @@ export default function Documents() {
                   </div>
                 </div>
               </div>
+
+              <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300">
+                <div className="p-6">
+                  <div className="flex items-center mb-4">
+                    <ClipboardList className="text-[#8B5A2B] mr-3" size={24} />
+                    <h3 className="font-semibold text-lg">Meeting Minutes</h3>
+                  </div>
+                  <p className="text-sm mb-4 text-gray-600">Records of board meetings, decisions made, and community discussions.</p>
+                  <div className="flex justify-between items-center">
+                    <span className="text-xs text-gray-500">Updated: Dec 1, 2023</span>
+                    <span className="text-[#2C5E1A] hover:text-[#4C8033] font-medium text-sm flex items-center">
+                      No Document Available
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300">
+                <div className="p-6">
+                  <div className="flex items-center mb-4">
+                    <MapPin className="text-[#8B5A2B] mr-3" size={24} />
+                    <h3 className="font-semibold text-lg">Property Maps</h3>
+                  </div>
+                  <p className="text-sm mb-4 text-gray-600">Detailed maps showing property boundaries, roads, and common areas.</p>
+                  <div className="flex justify-between items-center">
+                    <span className="text-xs text-gray-500">Updated: Nov 15, 2023</span>
+                    <span className="text-[#2C5E1A] hover:text-[#4C8033] font-medium text-sm flex items-center">
+                      No Document Available
+                    </span>
+                  </div>
+                </div>
+              </div>
             </>
           )}
         </div>
