@@ -84,11 +84,6 @@ export default function DocumentUpload() {
       uploadMutation.mutate(formData);
     } catch (error) {
       console.error('Upload error:', error);
-      toast({
-        title: "Upload failed",
-        description: "Failed to prepare file for upload",
-        variant: "destructive",
-      });
     }
   };
   
