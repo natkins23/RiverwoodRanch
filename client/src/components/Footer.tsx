@@ -1,6 +1,6 @@
 import { Link } from "wouter";
 import { 
-  Network, 
+  Sun, 
   Facebook, 
   Instagram, 
   MapPin, 
@@ -16,7 +16,7 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           <div>
             <div className="flex items-center mb-4">
-              <Network className="text-[#D4AF37] mr-3" size={24} />
+              <Sun className="text-[#D4AF37] mr-3" size={24} />
               <h2 className="text-xl font-bold">Riverwood Ranch</h2>
             </div>
             <p className="text-gray-300 text-sm mb-6">
@@ -31,7 +31,7 @@ export default function Footer() {
               </a>
             </div>
           </div>
-          
+
           <div>
             <h3 className="text-lg font-semibold mb-4">Quick Links</h3>
             <ul className="space-y-2">
@@ -67,7 +67,7 @@ export default function Footer() {
               </li>
             </ul>
           </div>
-          
+
           <div>
             <h3 className="text-lg font-semibold mb-4">Important Documents</h3>
             <ul className="space-y-2">
@@ -98,7 +98,7 @@ export default function Footer() {
               </li>
             </ul>
           </div>
-          
+
           <div>
             <h3 className="text-lg font-semibold mb-4">Contact Information</h3>
             <ul className="space-y-3">
@@ -121,7 +121,7 @@ export default function Footer() {
             </ul>
           </div>
         </div>
-        
+
         <div className="border-t border-gray-700 mt-8 pt-8 flex flex-col md:flex-row justify-between items-center">
           <p className="text-sm text-gray-400">&copy; {new Date().getFullYear()} Riverwood Ranch Corporation. All rights reserved.</p>
           <div className="mt-4 md:mt-0">

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Menu, X, Network } from "lucide-react";
+import { Menu, X, Sun } from "lucide-react";
 import { Link } from "wouter";
 
 const navLinks = [
@@ -23,7 +23,7 @@ export default function Navbar() {
       <div className="container mx-auto px-4 py-4 flex flex-col md:flex-row justify-between items-center">
         <div className="flex items-center mb-4 md:mb-0 justify-between w-full md:w-auto">
           <div className="flex items-center">
-            <Network className="mr-3 text-[#D4AF37]" size={30} />
+            <Sun className="mr-3 text-[#D4AF37]" size={30} />
             <h1 className="font-bold text-2xl md:text-3xl">Riverwood Ranch</h1>
           </div>
           <button
