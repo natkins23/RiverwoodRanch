@@ -4,10 +4,9 @@ export default function Properties() {
   const roadManagementItems = [
     "Regular grading and surface maintenance of all shared roads",
     "Drainage system upkeep to prevent erosion and water damage",
-    "Vegetation management along roadways for fire safety and access",
-    "Snow removal during winter months when necessary",
     "Installation and maintenance of signage and safety features",
-    "Coordination with utility companies for access and repairs"
+    "Coordination with utility companies for access and repairs",
+    "Pursue legal action in regards to unpaid dues"
   ];
 
   return (
