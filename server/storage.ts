@@ -150,42 +150,17 @@ export class MemStorage implements IStorage {
       {
         name: "Robert Johnson",
         position: "President",
-        bio: "Property owner since 2005, Robert brings 15 years of experience in community management and civil engineering to his role as board president.",
-        imageUrl: "https://images.unsplash.com/photo-1560250097-0b93528c311a",
-        email: "robert.johnson@example.com",
-        propertyNumber: "#12"
-      },
-      {
-        name: "Sarah Martinez",
-        position: "Vice President",
-        bio: "With a background in environmental conservation, Sarah focuses on sustainable practices for road maintenance and preservation of natural resources.",
-        imageUrl: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2",
-        email: "sarah.martinez@example.com",
-        propertyNumber: "#7"
+        email: "president@riverwoodranch.org",
       },
       {
         name: "Michael Chen",
         position: "Treasurer",
-        bio: "As a financial advisor with extensive experience in budget management, Michael oversees the ranch's finances and annual budget planning.",
-        imageUrl: "https://images.unsplash.com/photo-1537511446984-935f663eb1f4",
-        email: "michael.chen@example.com",
-        propertyNumber: "#23"
+        email: "treasurer@riverwoodranch.org",
       },
       {
         name: "Emily Williams",
         position: "Secretary",
-        bio: "Former legal assistant with meticulous attention to detail, Emily maintains records and ensures clear communication among all property owners.",
-        imageUrl: "https://images.unsplash.com/photo-1580489944761-15a19d654956",
-        email: "emily.williams@example.com",
-        propertyNumber: "#19"
-      },
-      {
-        name: "David Thompson",
-        position: "Maintenance Director",
-        bio: "With expertise in construction and land management, David coordinates all road maintenance projects and emergency repairs.",
-        imageUrl: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e",
-        email: "david.thompson@example.com",
-        propertyNumber: "#31"
+        email: "secretary@riverwoodranch.org",
       }
     ];
     

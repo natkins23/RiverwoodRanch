@@ -282,7 +282,7 @@ export default function Contact() {
                   </div>
                   <div>
                     <h4 className="font-medium mb-1">Phone</h4>
-                    <p className="text-gray-600">(310) 555-0123</p>
+                    <p className="text-gray-600">(888) 555-0123</p>
                     <p className="text-sm text-gray-500 mt-1">Monday-Friday, 9am-5pm PT</p>
                   </div>
                 </div>
