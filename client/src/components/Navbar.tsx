@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Menu, X, Sun } from "lucide-react";
 import { Link } from "wouter";
+import { scrollToElement } from "@/lib/utils";
 
 const navLinks = [
   { name: "Home", href: "#home" },
