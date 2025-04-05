@@ -90,7 +90,7 @@ export default function Properties() {
                   style={{ border: 0 }}
                   loading="lazy"
                   allowFullScreen
-                  src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d13269.327635490083!2d-118.3190919!3d34.277407!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sen!2sus!4v1712267900000!5m2!1sen!2sus"
+                  src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d13269.327635490083!2d-118.3186442!3d34.2770449!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sen!2sus!4v1712267900000!5m2!1sen!2sus"
                   title="Map of Riverwood Ranch location"
                   className="w-full h-full"
                 />
