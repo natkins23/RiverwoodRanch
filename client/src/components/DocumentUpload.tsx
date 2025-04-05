@@ -83,7 +83,7 @@ export default function DocumentUpload() {
       formData.append("title", data.title);
       formData.append("type", data.type);
       formData.append("description", data.description);
-      formData.append("file", data.file[0]);
+      formData.append("file", data.file);
       
       uploadMutation.mutate(formData);
     } catch (error) {
