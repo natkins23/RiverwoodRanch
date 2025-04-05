@@ -179,9 +179,23 @@ export default function Contact() {
                   name="phone"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Phone Number</FormLabel>
+                      <FormLabel>Phone Number*</FormLabel>
                       <FormControl>
-                        <Input type="tel" {...field} />
+                        <Input type="tel" {...field} required />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={contactForm.control}
+                  name="address"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Address</FormLabel>
+                      <FormControl>
+                        <Input {...field} placeholder="Street address, City, State, ZIP" />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -261,9 +275,9 @@ export default function Contact() {
                         />
                       </FormControl>
                       <div className="space-y-1 leading-none">
-                        <FormLabel>Add me to the community email chain</FormLabel>
+                        <FormLabel>Request to be added to community email chain</FormLabel>
                         <p className="text-sm text-gray-500">
-                          Receive important updates and participate in community discussions
+                          Submit a request to join the community email chain for important updates and discussions
                         </p>
                       </div>
                     </FormItem>
