@@ -42,7 +42,11 @@ export default function Navbar() {
                 <a
                   href={link.href}
                   className="block px-3 py-2 rounded hover:bg-[#4C8033] transition-colors duration-300"
-                  onClick={() => setIsMenuOpen(false)}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setIsMenuOpen(false);
+                    scrollToElement(link.href.substring(1));
+                  }}
                 >
                   {link.name}
                 </a>

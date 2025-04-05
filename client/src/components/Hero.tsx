@@ -18,9 +18,7 @@ export default function Hero() {
           <Button 
             variant="default" 
             className="bg-[#2C5E1A] hover:bg-[#4C8033] text-white px-6 py-6 rounded-md transition-colors duration-300 font-medium"
-            onClick={() => {
-              document.getElementById('about')?.scrollIntoView({ behavior: 'smooth' });
-            }}
+            onClick={() => scrollToElement('about')}
           >
             Learn More <ChevronRight className="ml-2 h-4 w-4" />
           </Button>
