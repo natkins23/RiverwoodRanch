@@ -1,8 +1,6 @@
 import { Link } from "wouter";
 import { 
   Sun, 
-  Facebook, 
-  Instagram, 
   MapPin, 
   Phone, 
   Mail, 
@@ -19,17 +17,9 @@ export default function Footer() {
               <Sun className="text-[#D4AF37] mr-3" size={24} />
               <h2 className="text-xl font-bold">Riverwood Ranch</h2>
             </div>
-            <p className="text-gray-300 text-sm mb-6">
+            <p className="text-gray-300 text-sm">
               A private community corporation managing road easements for 36 properties in Southern California.
             </p>
-            <div className="flex space-x-4">
-              <a href="#" className="text-gray-300 hover:text-[#D4AF37] transition-colors duration-300">
-                <Facebook size={18} />
-              </a>
-              <a href="#" className="text-gray-300 hover:text-[#D4AF37] transition-colors duration-300">
-                <Instagram size={18} />
-              </a>
-            </div>
           </div>
 
           <div>
