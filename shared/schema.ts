@@ -40,10 +40,7 @@ export const boardMembers = pgTable("board_members", {
   id: serial("id").primaryKey(),
   name: text("name").notNull(),
   position: text("position").notNull(),
-  bio: text("bio").notNull(),
-  imageUrl: text("image_url").notNull(),
   email: text("email").notNull(),
-  propertyNumber: text("property_number").notNull(),
 });
 
 export const insertBoardMemberSchema = createInsertSchema(boardMembers).omit({
