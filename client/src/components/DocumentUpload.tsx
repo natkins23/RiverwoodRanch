@@ -233,6 +233,5 @@ export default function DocumentUpload() {
           </Button>
         </form>
       </Form>
-    </div>
   );
 }
