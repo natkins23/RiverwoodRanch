@@ -69,6 +69,14 @@ export default function About() {
                 </div>
                 <p className="text-sm">Coordinated security measures to ensure the safety of all residents and properties.</p>
               </div>
+
+              <div className="bg-[#2C5E1A] bg-opacity-10 p-4 rounded-lg">
+                <div className="flex items-center mb-2">
+                  <Users className="text-[#2C5E1A] mr-3" size={20} />
+                  <h4 className="font-semibold">Privacy Protection</h4>
+                </div>
+                <p className="text-sm">Maintaining the privacy and exclusivity of our gated community while protecting resident information.</p>
+              </div>
             </div>
           </div>
         </div>
