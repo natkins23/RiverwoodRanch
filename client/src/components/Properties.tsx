@@ -5,7 +5,8 @@ export default function Properties() {
     "Regular grading and surface maintenance of all shared roads",
     "Drainage system upkeep to prevent erosion and water damage",
     "Installation and maintenance of signage and safety features",
-    "Coordination with utility companies for access and repairs",
+    "Coordination with repair companies for access and fee negotiation",
+    "Management of road access agreements for authorized non-property users",
     "Pursue legal action in regards to unpaid dues"
   ];
 
