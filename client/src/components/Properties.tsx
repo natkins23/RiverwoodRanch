@@ -6,7 +6,7 @@ export default function Properties() {
     "Drainage system upkeep to prevent erosion and water damage",
     "Installation and maintenance of signage and safety features",
     "Coordination with repair companies for access and fee negotiation",
-    "Management of road access agreements for authorized non-property users",
+    "Legal maintenance of road access agreements for authorized non-property users",
     "Pursue legal action in regards to unpaid dues"
   ];
 
