@@ -289,6 +289,17 @@ export default function Contact() {
                 
                 <div className="flex items-start">
                   <div className="bg-[#2C5E1A] bg-opacity-10 p-3 rounded-full mr-4">
+                    <MapPin className="text-[#2C5E1A]" size={20} />
+                  </div>
+                  <div>
+                    <h4 className="font-medium mb-1">Mailing Address</h4>
+                    <p className="text-gray-600">PO Box 12345</p>
+                    <p className="text-sm text-gray-500 mt-1">Los Angeles, CA 90001</p>
+                  </div>
+                </div>
+                
+                <div className="flex items-start">
+                  <div className="bg-[#2C5E1A] bg-opacity-10 p-3 rounded-full mr-4">
                     <Calendar className="text-[#2C5E1A]" size={20} />
                   </div>
                   <div>

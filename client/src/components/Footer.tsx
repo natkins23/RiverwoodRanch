@@ -104,7 +104,7 @@ export default function Footer() {
             <ul className="space-y-3">
               <li className="flex items-start">
                 <MapPin className="mt-1 mr-3 text-[#D4AF37]" size={16} />
-                <span>Los Angeles, California</span>
+                <span>PO Box 12345, Los Angeles, CA 90001</span>
               </li>
               <li className="flex items-start">
                 <Phone className="mt-1 mr-3 text-[#D4AF37]" size={16} />
