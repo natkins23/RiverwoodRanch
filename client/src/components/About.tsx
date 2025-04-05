@@ -25,7 +25,7 @@ export default function About() {
             </p>
             
             <p className="mb-6">
-              Established in 1985, Riverwood Ranch has grown into a thriving community that values cooperation, sustainability, and responsible land management.
+              With homes built as early as 1948, Riverwood Ranch has grown into a thriving community that values cooperation, sustainability, and responsible land management.
             </p>
             
             <div className="bg-[#F5F5DC] p-5 rounded-lg border border-[#D2B48C]">
