@@ -33,14 +33,20 @@ export default function Board() {
               <div key={member.id} className="bg-[#F5F5DC] rounded-lg p-6 shadow-md">
                 <h3 className="text-xl font-bold text-[#8B5A2B]">{member.name}</h3>
                 <p className="text-[#2C5E1A] font-medium mb-3">{member.position}</p>
-                <a 
-                  href={`mailto:${member.email}`}
-                  className="inline-flex items-center text-[#2C5E1A] hover:text-[#4C8033]"
-                  aria-label={`Email ${member.name}`}
-                >
-                  <Mail className="mr-2 h-4 w-4" />
-                  Contact
-                </a>
+                <div className="space-y-2">
+                  <a 
+                    href={`mailto:${member.email}`}
+                    className="inline-flex items-center text-[#2C5E1A] hover:text-[#4C8033]"
+                    aria-label={`Email ${member.name}`}
+                  >
+                    <Mail className="mr-2 h-4 w-4" />
+                    {member.email}
+                  </a>
+                  <div className="flex items-center text-[#2C5E1A]">
+                    <Phone className="mr-2 h-4 w-4" />
+                    {member.phone}
+                  </div>
+                </div>
               </div>
             ))
           ) : (

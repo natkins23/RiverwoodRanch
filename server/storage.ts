@@ -150,17 +150,20 @@ export class MemStorage implements IStorage {
       {
         name: "Robert Johnson",
         position: "President",
-        email: "president@riverwoodranch.org",
+        email: "rjohnson@riverwoodranch.org",
+        phone: "(888) 555-1234"
       },
       {
         name: "Michael Chen",
         position: "Treasurer",
-        email: "treasurer@riverwoodranch.org",
+        email: "mchen@riverwoodranch.org",
+        phone: "(888) 555-5678"
       },
       {
         name: "Emily Williams",
         position: "Secretary",
-        email: "secretary@riverwoodranch.org",
+        email: "ewilliams@riverwoodranch.org",
+        phone: "(888) 555-9012"
       }
     ];
     

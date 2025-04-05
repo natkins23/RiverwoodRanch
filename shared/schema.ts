@@ -41,6 +41,7 @@ export const boardMembers = pgTable("board_members", {
   name: text("name").notNull(),
   position: text("position").notNull(),
   email: text("email").notNull(),
+  phone: text("phone").notNull(),
 });
 
 export const insertBoardMemberSchema = createInsertSchema(boardMembers).omit({
