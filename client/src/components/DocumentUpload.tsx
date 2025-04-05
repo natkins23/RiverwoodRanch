@@ -73,14 +73,23 @@ export default function DocumentUpload() {
     }
   });
   
-  const onSubmit = (data: UploadFormValues) => {
-    const formData = new FormData();
-    formData.append("title", data.title);
-    formData.append("type", data.type);
-    formData.append("description", data.description);
-    formData.append("file", data.file);
-    
-    uploadMutation.mutate(formData);
+  const onSubmit = async (data: UploadFormValues) => {
+    try {
+      const formData = new FormData();
+      formData.append("title", data.title);
+      formData.append("type", data.type);
+      formData.append("description", data.description);
+      formData.append("file", data.file, data.file.name);
+      
+      uploadMutation.mutate(formData);
+    } catch (error) {
+      console.error('Upload error:', error);
+      toast({
+        title: "Upload failed",
+        description: "Failed to prepare file for upload",
+        variant: "destructive",
+      });
+    }
   };
   
   const handleFileInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
