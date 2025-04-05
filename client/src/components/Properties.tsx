@@ -43,7 +43,7 @@ export default function Properties() {
                 <Combine className="text-[#2C5E1A] mt-1 mr-3" size={20} />
                 <div>
                   <h4 className="font-medium">Property Sizes</h4>
-                  <p className="text-sm">Properties range from 1-acre parcels to 10+ acre estates, offering both privacy and a sense of community within our ranch boundaries.</p>
+                  <p className="text-sm">Properties range from 2-acre parcels to 5+ acre estates, offering both privacy and a sense of community within our ranch boundaries.</p>
                 </div>
               </div>
               
