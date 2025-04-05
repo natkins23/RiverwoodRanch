@@ -1,6 +1,15 @@
 import { useQuery } from "@tanstack/react-query";
-import { ArrowRight, File, FileText, FileSpreadsheet, ClipboardList, MapPin, Calendar } from "lucide-react";
+import { ArrowRight, File, FileText, FileSpreadsheet, ClipboardList, MapPin, Calendar, Upload } from "lucide-react";
 import DocumentUpload from "./DocumentUpload";
+import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { Document } from "@shared/schema";
 
 export default function Documents() {
@@ -167,8 +176,26 @@ export default function Documents() {
           )}
         </div>
         
-        {/* Upload Document Section */}
-        <DocumentUpload />
+        {/* Upload Document Button and Modal */}
+        <div className="mt-12 text-center">
+          <Dialog>
+            <DialogTrigger asChild>
+              <Button className="bg-[#2C5E1A] hover:bg-[#4C8033] text-white">
+                <Upload className="mr-2 h-4 w-4" />
+                Upload New Document
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-[500px]">
+              <DialogHeader>
+                <DialogTitle className="text-[#2C5E1A]">Upload New Document</DialogTitle>
+                <DialogDescription>
+                  Board members can upload new documents for the community. All uploads require administrative approval.
+                </DialogDescription>
+              </DialogHeader>
+              <DocumentUpload />
+            </DialogContent>
+          </Dialog>
+        </div>
       </div>
     </section>
   );

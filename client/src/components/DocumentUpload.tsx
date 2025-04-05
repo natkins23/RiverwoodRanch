@@ -108,13 +108,7 @@ export default function DocumentUpload() {
   };
   
   return (
-    <div className="mt-12 max-w-lg mx-auto bg-white p-6 rounded-lg shadow-md">
-      <h3 className="text-xl font-semibold mb-4 text-[#2C5E1A]">Upload New Document</h3>
-      <p className="text-sm mb-6 text-gray-600">
-        Board members can upload new documents for the community. All uploads require administrative approval.
-      </p>
-      
-      <Form {...form}>
+    <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
           <FormField
             control={form.control}
