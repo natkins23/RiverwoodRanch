@@ -10,6 +10,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import * as React from "react";
 import { Document } from "@shared/schema";
 
 export default function Documents() {
@@ -185,7 +186,7 @@ export default function Documents() {
                 Upload New Document
               </Button>
             </DialogTrigger>
-            <DialogContent className="sm:max-w-[500px]">
+            <DialogContent>
               <DialogHeader>
                 <DialogTitle className="text-[#2C5E1A]">Upload New Document</DialogTitle>
                 <DialogDescription>
