@@ -177,7 +177,7 @@ export default function DocumentUpload() {
                       Drag and drop your file here, or click to select
                     </p>
                     <p className="text-xs text-gray-400">
-                      Supported formats: PDF, DOC, DOCX, XLS, XLSX (Max 10MB)
+                      Supported formats: PDF, DOC, DOCX (Max 25MB)
                     </p>
                     {value && (
                       <p className="text-sm text-[#2C5E1A] mt-2">
