@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useMutation } from "@tanstack/react-query";
-import { RectangleEllipsis, Phone, Calendar, AlertCircle } from "lucide-react";
+import { RectangleEllipsis, Phone, Calendar, AlertCircle, MapPin } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
 import { insertContactSchema, insertNewsletterSchema } from "@shared/schema";
