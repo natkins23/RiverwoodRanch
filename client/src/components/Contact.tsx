@@ -249,6 +249,27 @@ export default function Contact() {
                   )}
                 />
                 
+                <FormField
+                  control={contactForm.control}
+                  name="joinEmailChain"
+                  render={({ field }) => (
+                    <FormItem className="flex flex-row items-start space-x-3 space-y-0">
+                      <FormControl>
+                        <Checkbox
+                          checked={field.value}
+                          onCheckedChange={field.onChange}
+                        />
+                      </FormControl>
+                      <div className="space-y-1 leading-none">
+                        <FormLabel>Add me to the community email chain</FormLabel>
+                        <p className="text-sm text-gray-500">
+                          Receive important updates and participate in community discussions
+                        </p>
+                      </div>
+                    </FormItem>
+                  )}
+                />
+
                 <Button 
                   type="submit" 
                   className="w-full bg-[#2C5E1A] hover:bg-[#4C8033]"
@@ -261,7 +282,7 @@ export default function Contact() {
           </div>
           
           <div>
-            <div className="bg-[#F5F5DC] p-8 rounded-lg shadow-md mb-8">
+            <div className="bg-[#F5F5DC] p-8 rounded-lg shadow-md">
               <h3 className="text-2xl font-semibold mb-6 text-[#8B5A2B]">Get In Touch</h3>
               
               <div className="space-y-6">
@@ -320,67 +341,6 @@ export default function Contact() {
                   </div>
                 </div>
               </div>
-            </div>
-            
-            <div className="bg-[#2C5E1A] text-white p-6 rounded-lg">
-              <h3 className="text-xl font-semibold mb-4">Newsletter Signup</h3>
-              <p className="text-sm mb-4">Stay updated with the latest news, maintenance schedules, and community events.</p>
-              
-              <Form {...newsletterForm}>
-                <form onSubmit={newsletterForm.handleSubmit(onNewsletterSubmit)} className="space-y-4">
-                  <FormField
-                    control={newsletterForm.control}
-                    name="email"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormControl>
-                          <Input 
-                            type="email" 
-                            placeholder="Your email address" 
-                            className="text-gray-800 w-full" 
-                            {...field}
-                          />
-                        </FormControl>
-                      </FormItem>
-                    )}
-                  />
-                  
-                  <FormField
-                    control={newsletterForm.control}
-                    name="joinEmailChain"
-                    render={({ field }) => (
-                      <FormItem className="flex items-start space-x-3 space-y-0">
-                        <FormControl>
-                          <Checkbox
-                            checked={field.value}
-                            onCheckedChange={field.onChange}
-                            className="bg-white data-[state=checked]:bg-[#D4AF37] data-[state=checked]:text-white"
-                          />
-                        </FormControl>
-                        <div className="space-y-1 leading-none">
-                          <FormLabel className="text-white">Add me to the community email chain</FormLabel>
-                          <p className="text-xs text-white/80">
-                            Receive important updates and participate in community discussions
-                          </p>
-                        </div>
-                      </FormItem>
-                    )}
-                  />
-                  
-                  <Button 
-                    type="submit" 
-                    className="w-full bg-[#D4AF37] hover:bg-opacity-90 text-gray-800"
-                    disabled={newsletterMutation.isPending}
-                  >
-                    {newsletterMutation.isPending ? "..." : "Subscribe"}
-                  </Button>
-                </form>
-                {newsletterForm.formState.errors.email && (
-                  <p className="text-xs text-white/80 mt-1">
-                    {newsletterForm.formState.errors.email.message}
-                  </p>
-                )}
-              </Form>
             </div>
           </div>
         </div>
