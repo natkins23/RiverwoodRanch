@@ -48,8 +48,16 @@ export default function About() {
             <div className="grid grid-cols-2 gap-6">
               <div className="bg-[#2C5E1A] bg-opacity-10 p-4 rounded-lg">
                 <div className="flex items-center mb-2">
+                  <SquareEqual className="text-[#2C5E1A] mr-3" size={20} />
+                  <h4 className="font-semibold">Dues Collection</h4>
+                </div>
+                <p className="text-sm">Efficient management of community dues to fund essential maintenance and security operations.</p>
+              </div>
+              
+              <div className="bg-[#2C5E1A] bg-opacity-10 p-4 rounded-lg">
+                <div className="flex items-center mb-2">
                   <TrafficCone className="text-[#2C5E1A] mr-3" size={20} />
-                  <h4 className="font-semibold">TrafficCone Maintenance</h4>
+                  <h4 className="font-semibold">Road Maintenance</h4>
                 </div>
                 <p className="text-sm">Regular upkeep and improvement of all shared roadways within the ranch property.</p>
               </div>
@@ -60,22 +68,6 @@ export default function About() {
                   <h4 className="font-semibold">Community Security</h4>
                 </div>
                 <p className="text-sm">Coordinated security measures to ensure the safety of all residents and properties.</p>
-              </div>
-              
-              <div className="bg-[#2C5E1A] bg-opacity-10 p-4 rounded-lg">
-                <div className="flex items-center mb-2">
-                  <Leaf className="text-[#2C5E1A] mr-3" size={20} />
-                  <h4 className="font-semibold">Environmental Care</h4>
-                </div>
-                <p className="text-sm">Preservation of natural landscape and wildlife habitats throughout the ranch.</p>
-              </div>
-              
-              <div className="bg-[#2C5E1A] bg-opacity-10 p-4 rounded-lg">
-                <div className="flex items-center mb-2">
-                  <Users className="text-[#2C5E1A] mr-3" size={20} />
-                  <h4 className="font-semibold">Community Events</h4>
-                </div>
-                <p className="text-sm">Regular gatherings to strengthen community bonds among property owners.</p>
               </div>
             </div>
           </div>
