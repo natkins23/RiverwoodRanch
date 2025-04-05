@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { Mail } from "lucide-react";
+import { Mail, Phone } from "lucide-react";
 import { BoardMember } from "@shared/schema";
 
 export default function Board() {
