@@ -75,15 +75,24 @@ export default function DocumentUpload() {
   
   const onSubmit = async (data: UploadFormValues) => {
     try {
+      if (!data.file) {
+        throw new Error('No file selected');
+      }
+      
       const formData = new FormData();
       formData.append("title", data.title);
       formData.append("type", data.type);
       formData.append("description", data.description);
-      formData.append("file", data.file, data.file.name);
+      formData.append("file", data.file[0]);
       
       uploadMutation.mutate(formData);
     } catch (error) {
       console.error('Upload error:', error);
+      toast({
+        title: "Upload Error",
+        description: error instanceof Error ? error.message : "Failed to upload file",
+        variant: "destructive"
+      });
     }
   };
   

@@ -39,11 +39,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const id = parseInt(req.params.id);
       const document = await storage.getDocumentById(id);
-      
+
       if (!document) {
         return res.status(404).json({ message: "Document not found" });
       }
-      
+
       res.json(document);
     } catch (error) {
       console.error("Error fetching document:", error);
@@ -54,12 +54,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Upload a document
   app.post("/api/documents", upload.single("file"), async (req: Request, res: Response) => {
     try {
+      console.log("Request body:", req.body);
+      console.log("Request file:", req.file);
+
       if (!req.file) {
         return res.status(400).json({ message: "No file uploaded" });
       }
-      
+
       const { title, type, description } = req.body;
-      
+
       // Validate the document data
       const documentData = {
         title,
@@ -68,18 +71,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
         fileName: req.file.originalname,
         fileContent: req.file.buffer.toString("base64")
       };
-      
+
       const validatedData = insertDocumentSchema.parse(documentData);
-      
+
       // Create the document
       const newDocument = await storage.createDocument(validatedData);
-      
+
       res.status(201).json(newDocument);
     } catch (error) {
       if (error instanceof z.ZodError) {
         return res.status(400).json({ message: "Invalid document data", errors: error.errors });
       }
-      
+
       console.error("Error uploading document:", error);
       res.status(500).json({ message: "Failed to upload document" });
     }
@@ -100,15 +103,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post("/api/contact", async (req: Request, res: Response) => {
     try {
       const validatedData = insertContactSchema.parse(req.body);
-      
+
       const newSubmission = await storage.createContactSubmission(validatedData);
-      
+
       res.status(201).json({ message: "Contact form submitted successfully", id: newSubmission.id });
     } catch (error) {
       if (error instanceof z.ZodError) {
         return res.status(400).json({ message: "Invalid form data", errors: error.errors });
       }
-      
+
       console.error("Error submitting contact form:", error);
       res.status(500).json({ message: "Failed to submit contact form" });
     }
@@ -118,15 +121,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post("/api/newsletter", async (req: Request, res: Response) => {
     try {
       const validatedData = insertNewsletterSchema.parse(req.body);
-      
+
       const newSubscription = await storage.createNewsletterSubscription(validatedData);
-      
+
       res.status(201).json({ message: "Subscribed to newsletter successfully", id: newSubscription.id });
     } catch (error) {
       if (error instanceof z.ZodError) {
         return res.status(400).json({ message: "Invalid email address", errors: error.errors });
       }
-      
+
       console.error("Error subscribing to newsletter:", error);
       res.status(500).json({ message: "Failed to subscribe to newsletter" });
     }
