@@ -1,5 +1,6 @@
 import { ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { scrollToElement } from "@/lib/utils";
 
 export default function Hero() {
   return (
