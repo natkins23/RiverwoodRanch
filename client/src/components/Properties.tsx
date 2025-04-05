@@ -79,7 +79,7 @@ export default function Properties() {
                 ))}
               </ul>
               
-              <p className="text-sm text-gray-600 italic">All property owners contribute to maintenance costs through annual dues, calculated based on property location and road usage.</p>
+              <p className="text-sm text-gray-600 italic">All property owners contribute to maintenance costs through annual dues, calculated based on maintenance costs of a given year.</p>
             </div>
             
             <div className="rounded-lg overflow-hidden shadow-md">
