@@ -1,4 +1,4 @@
-import type { Express, Request, Response } from "express";
+import type { Express, Request, Response, NextFunction } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { 
@@ -10,6 +10,8 @@ import { z } from "zod";
 import path from "path";
 import fs from "fs";
 import multer from "multer";
+import { bucket } from "./firebase";
+import { format } from "util";
 
 // Configure multer for memory storage
 const upload = multer({ 
@@ -55,21 +57,66 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post("/api/documents", upload.single("file"), async (req: Request, res: Response) => {
     try {
       console.log("Request body:", req.body);
-      console.log("Request file:", req.file);
+      console.log("Request file:", req.file ? "File received" : "No file");
 
       if (!req.file) {
         return res.status(400).json({ message: "No file uploaded" });
       }
 
+      // Destructure required fields with type safety
       const { title, type, description } = req.body;
+      const file = req.file; // Store in a separate variable to avoid potential undefined checks
+      
+      // Create a unique filename
+      const timestamp = Date.now();
+      const fileName = `${timestamp}-${file.originalname.replace(/\s+/g, "_")}`;
+      const filePath = `documents/${fileName}`;
+      
+      // Create a new blob in the bucket
+      const blob = bucket.file(filePath);
+      
+      // Create a stream to write the upload file into Firebase Storage
+      const blobStream = blob.createWriteStream({
+        metadata: {
+          contentType: file.mimetype,
+        },
+      });
+      
+      // Return a promise that resolves when the file finishes uploading
+      const uploadPromise = new Promise<string>((resolve, reject) => {
+        blobStream.on("error", (error) => {
+          console.error("Upload error:", error);
+          reject("Something went wrong with the upload");
+        });
+        
+        blobStream.on("finish", async () => {
+          try {
+            // Make the file publicly accessible
+            await blob.makePublic();
+            
+            // Get the public URL
+            const publicUrl = format(`https://storage.googleapis.com/${bucket.name}/${blob.name}`);
+            resolve(publicUrl);
+          } catch (err) {
+            console.error("Error making file public:", err);
+            reject("Error making file public");
+          }
+        });
+        
+        // End the stream with the file buffer
+        blobStream.end(file.buffer);
+      });
+      
+      // Wait for the file to be uploaded and get the public URL
+      const fileUrl = await uploadPromise;
 
       // Validate the document data
       const documentData = {
         title,
         type,
         description,
-        fileName: req.file.originalname,
-        fileContent: req.file.buffer.toString("base64")
+        fileName: file.originalname,
+        fileContent: fileUrl // Store the public URL instead of base64
       };
 
       const validatedData = insertDocumentSchema.parse(documentData);

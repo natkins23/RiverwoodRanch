@@ -81,8 +81,9 @@ export default function Documents() {
                       Updated: {new Date(doc.uploadDate).toLocaleDateString()}
                     </span>
                     <a 
-                      href={`data:application/octet-stream;base64,${doc.fileContent}`}
-                      download={doc.fileName}
+                      href={doc.fileContent}
+                      target="_blank"
+                      rel="noopener noreferrer"
                       className="text-[#2C5E1A] hover:text-[#4C8033] font-medium text-sm flex items-center"
                     >
                       View Document <ArrowRight className="ml-1 h-4 w-4" />
