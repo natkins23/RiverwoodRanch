@@ -1,7 +1,6 @@
 import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
 import About from "@/components/About";
-import Documents from "@/components/Documents";
 import Board from "@/components/Board";
 import Properties from "@/components/Properties";
 import Contact from "@/components/Contact";
@@ -14,7 +13,6 @@ export default function Home() {
       <main>
         <Hero />
         <About />
-        <Documents />
         <Board />
         <Properties />
         <Contact />
