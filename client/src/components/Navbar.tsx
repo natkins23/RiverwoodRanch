@@ -1,7 +1,24 @@
-import { useState, useEffect } from "react";
-import { Menu, X, Sun } from "lucide-react";
+import { useState, useEffect, createContext, useContext } from "react";
+import { Menu, X, Sun, LogOut, ShieldCheck, User } from "lucide-react";
 import { Link, useLocation } from "wouter";
 import { scrollToElement } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+
+// Define access level type
+export type NavbarAccessLevel = 'none' | 'user' | 'admin';
+
+// Create context to manage access level state across the app
+export const AccessLevelContext = createContext<{
+  accessLevel: NavbarAccessLevel;
+  setAccessLevel: (level: NavbarAccessLevel) => void;
+}>({
+  accessLevel: 'none',
+  setAccessLevel: () => {},
+});
+
+// Custom hook to use the access level context
+export const useAccessLevel = () => useContext(AccessLevelContext);
 
 // Links for scrolling within the homepage
 const scrollLinks = [
@@ -23,6 +40,9 @@ export default function Navbar() {
   const [isHomePage, setIsHomePage] = useState(true);
   const [prevScrollPos, setPrevScrollPos] = useState(0);
   const [visible, setVisible] = useState(true);
+  
+  // Get access level from context
+  const { accessLevel, setAccessLevel } = useAccessLevel();
 
   useEffect(() => {
     setIsHomePage(location === "/");
@@ -45,6 +65,12 @@ export default function Navbar() {
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
+  };
+  
+  // Handle sign out
+  const handleSignOut = () => {
+    setAccessLevel('none');
+    setIsMenuOpen(false);
   };
 
   return (
@@ -70,56 +96,79 @@ export default function Navbar() {
           </button>
         </div>
         
-        <nav className={`w-full md:w-auto ${isMenuOpen ? 'block' : 'hidden md:block'}`}>
-          <ul className="flex flex-col md:flex-row gap-1 md:gap-6 text-sm md:text-base">
-            {/* Home page scroll links */}
-            {isHomePage && scrollLinks.map((link) => (
-              <li key={link.name}>
-                <a
-                  href={link.href}
-                  className="block px-3 py-2 rounded hover:bg-[#4C8033] transition-colors duration-300"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    setIsMenuOpen(false);
-                    scrollToElement(link.href.substring(1));
-                  }}
-                >
-                  {link.name}
-                </a>
-              </li>
-            ))}
-            
-            {/* Page navigation links */}
-            {pageLinks.map((link) => (
-              <li key={link.name}>
-                <Link href={link.href}>
-                  <span
-                    className={`block px-3 py-2 rounded hover:bg-[#4C8033] transition-colors duration-300 cursor-pointer ${
-                      location === link.href ? "bg-[#4C8033]" : ""
-                    }`}
-                    onClick={() => setIsMenuOpen(false)}
+        <div className="flex items-center">
+          <nav className={`w-full md:w-auto ${isMenuOpen ? 'block' : 'hidden md:block'}`}>
+            <ul className="flex flex-col md:flex-row gap-1 md:gap-6 text-sm md:text-base">
+              {/* Home page scroll links */}
+              {isHomePage && scrollLinks.map((link) => (
+                <li key={link.name}>
+                  <a
+                    href={link.href}
+                    className="block px-3 py-2 rounded hover:bg-[#4C8033] transition-colors duration-300"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setIsMenuOpen(false);
+                      scrollToElement(link.href.substring(1));
+                    }}
                   >
                     {link.name}
-                  </span>
-                </Link>
-              </li>
-            ))}
-            
-            {/* Home link when not on homepage */}
-            {!isHomePage && (
-              <li>
-                <Link href="/">
-                  <span 
-                    className="block px-3 py-2 rounded hover:bg-[#4C8033] transition-colors duration-300 cursor-pointer"
-                    onClick={() => setIsMenuOpen(false)}
-                  >
-                    Home
-                  </span>
-                </Link>
-              </li>
-            )}
-          </ul>
-        </nav>
+                  </a>
+                </li>
+              ))}
+              
+              {/* Page navigation links */}
+              {pageLinks.map((link) => (
+                <li key={link.name}>
+                  <Link href={link.href}>
+                    <span
+                      className={`block px-3 py-2 rounded hover:bg-[#4C8033] transition-colors duration-300 cursor-pointer ${
+                        location === link.href ? "bg-[#4C8033]" : ""
+                      }`}
+                      onClick={() => setIsMenuOpen(false)}
+                    >
+                      {link.name}
+                    </span>
+                  </Link>
+                </li>
+              ))}
+              
+              {/* Home link when not on homepage */}
+              {!isHomePage && (
+                <li>
+                  <Link href="/">
+                    <span 
+                      className="block px-3 py-2 rounded hover:bg-[#4C8033] transition-colors duration-300 cursor-pointer"
+                      onClick={() => setIsMenuOpen(false)}
+                    >
+                      Home
+                    </span>
+                  </Link>
+                </li>
+              )}
+            </ul>
+          </nav>
+          
+          {/* Access Level Badge and Sign Out - Only show when authenticated */}
+          {accessLevel !== 'none' && (
+            <div className={`flex items-center mt-4 md:mt-0 md:ml-6 ${isMenuOpen ? 'block' : 'hidden md:flex'}`}>
+              <Badge className="mr-2 bg-[#4C8033] text-white border-0 flex items-center">
+                {accessLevel === 'admin' 
+                  ? <><ShieldCheck className="mr-1 h-3 w-3" /> Board Member</>
+                  : <><User className="mr-1 h-3 w-3" /> Property Owner</>
+                }
+              </Badge>
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                className="text-white hover:bg-[#4C8033]"
+                onClick={handleSignOut}
+              >
+                <LogOut className="h-4 w-4 mr-1" />
+                <span className="hidden sm:inline">Sign Out</span>
+              </Button>
+            </div>
+          )}
+        </div>
       </div>
     </header>
   );

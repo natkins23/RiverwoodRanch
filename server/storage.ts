@@ -5,6 +5,7 @@ import {
   contactSubmissions, type ContactSubmission, type InsertContact,
   newsletterSubscriptions, type NewsletterSubscription, type InsertNewsletter
 } from "@shared/schema";
+import { bucket } from "./firebase";
 
 // modify the interface with any CRUD methods
 // you might need
@@ -18,6 +19,7 @@ export interface IStorage {
   getAllDocuments(): Promise<Document[]>;
   getDocumentById(id: number): Promise<Document | undefined>;
   createDocument(document: InsertDocument): Promise<Document>;
+  syncWithFirebase(): Promise<void>; // New method to sync with Firebase
   
   // Board member methods
   getAllBoardMembers(): Promise<BoardMember[]>;
@@ -33,6 +35,7 @@ export interface IStorage {
 
 import * as fs from 'fs';
 import * as path from 'path';
+import { format } from "util";
 
 export class MemStorage implements IStorage {
   private users: Map<number, User>;
@@ -74,6 +77,11 @@ export class MemStorage implements IStorage {
     
     // Initialize with default board members
     this.initializeBoardMembers();
+    
+    // Sync with Firebase
+    this.syncWithFirebase().catch((err: Error) => {
+      console.error("Error syncing with Firebase:", err);
+    });
   }
   
   // Save documents to file
@@ -244,6 +252,106 @@ export class MemStorage implements IStorage {
     defaultBoardMembers.forEach(member => {
       this.createBoardMember(member);
     });
+  }
+  
+  // Sync with Firebase Storage
+  async syncWithFirebase(): Promise<void> {
+    try {
+      console.log("Syncing documents with Firebase Storage...");
+      const [files] = await bucket.getFiles({ prefix: 'documents/' });
+      
+      if (files.length === 0) {
+        console.log("No files found in Firebase Storage.");
+        return;
+      }
+      
+      console.log(`Found ${files.length} files in Firebase Storage.`);
+      
+      // Keep track of which document IDs we already have in local storage
+      // to avoid duplicates
+      const existingUrls = new Set(
+        Array.from(this.documents.values()).map(doc => doc.fileContent)
+      );
+      
+      for (const file of files) {
+        try {
+          // Skip files that aren't in the right format (like folders)
+          if (!file.name.includes('-')) continue;
+          
+          // Get the public URL
+          await file.makePublic();
+          const publicUrl = format(`https://storage.googleapis.com/${bucket.name}/${file.name}`);
+          
+          // Skip if we already have this document
+          if (existingUrls.has(publicUrl)) {
+            console.log(`Document already exists: ${file.name}`);
+            continue;
+          }
+          
+          // Extract original filename
+          const fileName = file.name.split('/').pop() || '';
+          const originalName = fileName.substring(fileName.indexOf('-') + 1).replace(/_/g, ' ');
+          
+          // Try to determine document type from file extension
+          const fileExtension = path.extname(originalName).toLowerCase();
+          let docType = 'other';
+          
+          if (fileExtension === '.pdf') {
+            if (originalName.toLowerCase().includes('financial')) {
+              docType = 'financial';
+            } else if (originalName.toLowerCase().includes('minutes')) {
+              docType = 'minutes';
+            } else if (originalName.toLowerCase().includes('map')) {
+              docType = 'map';
+            } else if (originalName.toLowerCase().includes('schedule')) {
+              docType = 'schedule';
+            } else if (originalName.toLowerCase().includes('agreement') || 
+                     originalName.toLowerCase().includes('bylaw')) {
+              docType = 'agreement';
+            }
+          }
+          
+          // Get file metadata
+          const [metadata] = await file.getMetadata();
+          // Use current time if metadata.timeCreated is not available
+          const createTime = metadata.timeCreated 
+            ? new Date(metadata.timeCreated as string) 
+            : new Date();
+          
+          // Generate a document title from the filename
+          const title = originalName.replace(fileExtension, '')
+            .split('_').join(' ')
+            .split('-').join(' ')
+            .replace(/\b\w/g, l => l.toUpperCase()); // Capitalize first letter of each word
+          
+          // Create a new document record
+          const id = this.currentDocumentId++;
+          const document: Document = {
+            id,
+            title,
+            type: docType,
+            description: `Uploaded on ${createTime.toLocaleDateString()}`,
+            fileName: originalName,
+            fileContent: publicUrl,
+            uploadDate: createTime,
+            visibility: 'public' // Default to public visibility
+          };
+          
+          // Add to our document map
+          this.documents.set(id, document);
+          console.log(`Added document from Firebase: ${title}`);
+        } catch (error) {
+          console.error(`Error processing file ${file.name}:`, error);
+        }
+      }
+      
+      // Save the updated documents to local storage
+      this.saveDocuments();
+      console.log("Firebase sync complete.");
+    } catch (error) {
+      console.error("Error syncing with Firebase:", error);
+      throw error;
+    }
   }
 }
 

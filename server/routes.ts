@@ -28,6 +28,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Get all documents
   app.get("/api/documents", async (req: Request, res: Response) => {
     try {
+      // Sync with Firebase first to ensure we have the latest documents
+      await storage.syncWithFirebase();
+      
       const documents = await storage.getAllDocuments();
       res.json(documents);
     } catch (error) {

@@ -1,0 +1,12 @@
+[
+  {
+    "id": 1,
+    "title": "Test",
+    "type": "other",
+    "description": "Uploaded on 4/7/2025",
+    "fileName": "test.pdf",
+    "fileContent": "https://storage.googleapis.com/riverwood-c3409.firebasestorage.app/documents/1744046576157-test.pdf",
+    "uploadDate": "2025-04-07T17:22:56.726Z",
+    "visibility": "public"
+  }
+]
