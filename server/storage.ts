@@ -31,6 +31,9 @@ export interface IStorage {
   createNewsletterSubscription(subscription: InsertNewsletter): Promise<NewsletterSubscription>;
 }
 
+import * as fs from 'fs';
+import * as path from 'path';
+
 export class MemStorage implements IStorage {
   private users: Map<number, User>;
   private documents: Map<number, Document>;
@@ -42,6 +45,8 @@ export class MemStorage implements IStorage {
   currentBoardMemberId: number;
   currentContactId: number;
   currentNewsletterId: number;
+  private dataDir: string;
+  private documentStoragePath: string;
 
   constructor() {
     this.users = new Map();
@@ -55,8 +60,56 @@ export class MemStorage implements IStorage {
     this.currentContactId = 1;
     this.currentNewsletterId = 1;
     
+    // Setup persistent storage
+    this.dataDir = path.join(process.cwd(), 'data');
+    this.documentStoragePath = path.join(this.dataDir, 'documents.json');
+    
+    // Create data directory if it doesn't exist
+    if (!fs.existsSync(this.dataDir)) {
+      fs.mkdirSync(this.dataDir, { recursive: true });
+    }
+    
+    // Load documents from file if it exists
+    this.loadDocuments();
+    
     // Initialize with default board members
     this.initializeBoardMembers();
+  }
+  
+  // Save documents to file
+  private saveDocuments() {
+    const documentsArray = Array.from(this.documents.values());
+    fs.writeFileSync(this.documentStoragePath, JSON.stringify(documentsArray, null, 2));
+  }
+  
+  // Load documents from file
+  private loadDocuments() {
+    try {
+      if (fs.existsSync(this.documentStoragePath)) {
+        const fileData = fs.readFileSync(this.documentStoragePath, 'utf8');
+        const documents: Document[] = JSON.parse(fileData);
+        
+        // Find the highest ID to set the counter correctly
+        let maxId = 0;
+        
+        documents.forEach(doc => {
+          // Convert string dates back to Date objects
+          doc.uploadDate = new Date(doc.uploadDate);
+          
+          this.documents.set(doc.id, doc);
+          if (doc.id > maxId) {
+            maxId = doc.id;
+          }
+        });
+        
+        // Set the counter to one more than the highest ID
+        this.currentDocumentId = maxId + 1;
+        
+        console.log(`Loaded ${documents.length} documents from storage`);
+      }
+    } catch (error) {
+      console.error('Error loading documents from file:', error);
+    }
   }
 
   async getUser(id: number): Promise<User | undefined> {
@@ -93,6 +146,10 @@ export class MemStorage implements IStorage {
       uploadDate: new Date() 
     };
     this.documents.set(id, document);
+    
+    // Save documents to file for persistence
+    this.saveDocuments();
+    
     return document;
   }
   
@@ -115,11 +172,21 @@ export class MemStorage implements IStorage {
   // Contact form methods
   async createContactSubmission(insertContact: InsertContact): Promise<ContactSubmission> {
     const id = this.currentContactId++;
-    const contact: ContactSubmission = { 
-      ...insertContact, 
-      id, 
-      submissionDate: new Date() 
+    
+    // Create the contact with proper typing
+    const contact: ContactSubmission = {
+      id,
+      firstName: insertContact.firstName,
+      lastName: insertContact.lastName,
+      email: insertContact.email,
+      phone: insertContact.phone ?? null,
+      address: insertContact.address ?? null,
+      subject: insertContact.subject,
+      message: insertContact.message,
+      isPropertyOwner: insertContact.isPropertyOwner ?? false,
+      submissionDate: new Date()
     };
+    
     this.contactSubmissions.set(id, contact);
     return contact;
   }
@@ -136,10 +203,13 @@ export class MemStorage implements IStorage {
     }
     
     const id = this.currentNewsletterId++;
-    const subscription: NewsletterSubscription = { 
-      ...insertSubscription, 
-      id, 
-      subscriptionDate: new Date() 
+    
+    // Create subscription with proper typing
+    const subscription: NewsletterSubscription = {
+      id,
+      email: insertSubscription.email,
+      joinEmailChain: insertSubscription.joinEmailChain ?? false,
+      subscriptionDate: new Date()
     };
     this.newsletterSubscriptions.set(id, subscription);
     return subscription;
