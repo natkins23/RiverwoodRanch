@@ -4,8 +4,7 @@ import { ArrowRight, File, FileText, FileSpreadsheet, ClipboardList, MapPin, Cal
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import PinLogin from "@/components/PinLogin";
-import AdminLogin from "@/components/AdminLogin";
+import PasscodeLogin, { AccessLevel as LoginAccessLevel } from "@/components/PasscodeLogin";
 import {
   Dialog,
   DialogContent,
@@ -92,8 +91,13 @@ export default function DocumentsPage() {
       return [];
     }
   };
+  
+  // Handle successful login with the determined access level
+  const handleLoginSuccess = (level: LoginAccessLevel) => {
+    setAccessLevel(level);
+  };
 
-  // If not authenticated, show login options
+  // If not authenticated, show login screen
   if (accessLevel === 'none') {
     return (
       <div className="bg-[#F5F5DC] min-h-screen">
@@ -102,26 +106,20 @@ export default function DocumentsPage() {
           <section className="py-16 bg-[#F5F5DC] bg-opacity-50 min-h-screen">
             <div className="container mx-auto px-6">
               <h2 className="text-3xl font-bold mb-8 text-center text-[#2C5E1A]">Ranch Documents</h2>
-              <p className="text-center max-w-3xl mx-auto mb-12">
-                This section contains all current documents for Riverwood Ranch. Please select your access level.
+              <p className="text-center max-w-3xl mx-auto mb-8">
+                This section contains all current documents for Riverwood Ranch.
               </p>
               
-              <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-                <div className="bg-white rounded-lg shadow-md overflow-hidden p-6">
-                  <h3 className="text-xl font-semibold text-center mb-4 text-[#2C5E1A]">Property Owner Access</h3>
-                  <p className="text-sm text-gray-600 mb-6 text-center">
-                    Enter your property owner PIN to access community documents.
-                  </p>
-                  <PinLogin onSuccess={() => setAccessLevel('user')} />
-                </div>
-                
-                <div className="bg-white rounded-lg shadow-md overflow-hidden p-6">
-                  <h3 className="text-xl font-semibold text-center mb-4 text-[#2C5E1A]">Board Member Access</h3>
-                  <p className="text-sm text-gray-600 mb-6 text-center">
-                    Enter your board member PIN to access all documents and upload new ones.
-                  </p>
-                  <AdminLogin onSuccess={() => setAccessLevel('admin')} />
-                </div>
+              <div className="max-w-md mx-auto bg-white rounded-lg shadow-md overflow-hidden p-8">
+                <h3 className="text-xl font-semibold text-center mb-6 text-[#2C5E1A]">Document Access</h3>
+                <p className="text-sm text-gray-600 mb-8 text-center">
+                  Please enter your passcode to access ranch documents.
+                  <br /><br />
+                  <span className="text-xs text-gray-500">
+                    Property owners and board members have different access levels.
+                  </span>
+                </p>
+                <PasscodeLogin onSuccess={handleLoginSuccess} />
               </div>
             </div>
           </section>
