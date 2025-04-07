@@ -2,6 +2,7 @@ import { initializeApp, cert } from 'firebase-admin/app';
 import { getStorage } from 'firebase-admin/storage';
 import dotenv from 'dotenv';
 dotenv.config();
+
 const firebaseConfig = {
   credential: cert({
     projectId: process.env.FIREBASE_PROJECT_ID,
