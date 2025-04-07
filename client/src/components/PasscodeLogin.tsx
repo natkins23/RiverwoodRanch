@@ -23,23 +23,14 @@ export default function PasscodeLogin({ onSuccess }: PasscodeLoginProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handlePasscodeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    // Only allow numeric input
-    const value = event.target.value.replace(/[^0-9]/g, '');
-    
-    // Limit to 4 digits
-    if (value.length <= 4) {
-      setPasscode(value);
-      setError(null);
-    }
+    const value = event.target.value;
+    setPasscode(value);
+    setError(null);
   };
 
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
     
-    if (passcode.length !== 4) {
-      setError("Passcode must be 4 digits");
-      return;
-    }
     
     setIsSubmitting(true);
     
@@ -67,13 +58,10 @@ export default function PasscodeLogin({ onSuccess }: PasscodeLoginProps) {
             <Input
               id="passcode"
               type="password"
-              inputMode="numeric" 
-              placeholder="••••"
               value={passcode}
               onChange={handlePasscodeChange}
               disabled={isSubmitting}
               className="text-center"
-              maxLength={4}
               autoComplete="off"
             />
           </div>
@@ -89,7 +77,6 @@ export default function PasscodeLogin({ onSuccess }: PasscodeLoginProps) {
         <Button 
           type="submit"
           className="w-full bg-[#2C5E1A] hover:bg-[#4C8033]"
-          disabled={passcode.length < 4 || isSubmitting}
         >
           {isSubmitting ? "Verifying..." : "Access Documents"}
         </Button>
