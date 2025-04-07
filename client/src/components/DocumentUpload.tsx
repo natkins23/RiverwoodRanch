@@ -32,12 +32,17 @@ const uploadFormSchema = z.object({
   title: z.string().min(1, "Title is required").min(3, "Title must be at least 3 characters"),
   type: z.string().min(1, "Document type is required"),
   description: z.string().min(1, "Description is required").min(10, "Description must be at least 10 characters"),
+  visibility: z.string().min(1, "Visibility is required"),
   file: z.instanceof(File, { message: "Please select a file" }).refine(file => file.size > 0, "Please select a file")
 });
 
 type UploadFormValues = z.infer<typeof uploadFormSchema>;
 
-export default function DocumentUpload() {
+interface DocumentUploadProps {
+  accessLevel?: 'user' | 'admin';
+}
+
+export default function DocumentUpload({ accessLevel = 'admin' }: DocumentUploadProps) {
   const [isDragging, setIsDragging] = useState(false);
   const { toast } = useToast();
   
@@ -47,6 +52,7 @@ export default function DocumentUpload() {
       title: "",
       type: "",
       description: "",
+      visibility: accessLevel === 'admin' ? "admin" : "protected",
     },
     mode: "onSubmit"
   });
@@ -83,6 +89,7 @@ export default function DocumentUpload() {
       formData.append("title", data.title);
       formData.append("type", data.type);
       formData.append("description", data.description);
+      formData.append("visibility", data.visibility);
       formData.append("file", data.file);
       
       uploadMutation.mutate(formData);
@@ -226,6 +233,38 @@ export default function DocumentUpload() {
                   {...field} 
                 />
               </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        
+        <FormField
+          control={form.control}
+          name="visibility"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Document Visibility</FormLabel>
+              <Select 
+                onValueChange={field.onChange} 
+                defaultValue={field.value}
+                disabled={accessLevel !== 'admin'}
+              >
+                <FormControl>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select visibility" />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                  <SelectItem value="public">Public (Visible to All)</SelectItem>
+                  <SelectItem value="protected">Protected (PIN Access: 7796)</SelectItem>
+                  <SelectItem value="admin">Admin Only (PIN Access: 7799)</SelectItem>
+                </SelectContent>
+              </Select>
+              <p className="text-xs text-muted-foreground mt-1">
+                {accessLevel === 'admin' 
+                  ? "Select who can view this document" 
+                  : "Only admin users can change document visibility"}
+              </p>
               <FormMessage />
             </FormItem>
           )}

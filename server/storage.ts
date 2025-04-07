@@ -140,8 +140,12 @@ export class MemStorage implements IStorage {
   
   async createDocument(insertDocument: InsertDocument): Promise<Document> {
     const id = this.currentDocumentId++;
+    // Ensure visibility is set, defaulting to "public" if not provided
+    const visibility = insertDocument.visibility || "public";
+    
     const document: Document = { 
       ...insertDocument, 
+      visibility, // Explicitly set visibility
       id, 
       uploadDate: new Date() 
     };

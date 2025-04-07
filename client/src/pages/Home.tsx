@@ -10,7 +10,7 @@ export default function Home() {
   return (
     <div className="bg-[#F5F5DC] min-h-screen">
       <Navbar />
-      <main>
+      <main className="pt-16 md:pt-20">
         <Hero />
         <About />
         <Board />

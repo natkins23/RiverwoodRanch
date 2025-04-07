@@ -64,7 +64,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
 
       // Destructure required fields with type safety
-      const { title, type, description } = req.body;
+      const { title, type, description, visibility } = req.body;
       const file = req.file; // Store in a separate variable to avoid potential undefined checks
       
       // Create a unique filename
@@ -116,7 +116,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
         type,
         description,
         fileName: file.originalname,
-        fileContent: fileUrl // Store the public URL instead of base64
+        fileContent: fileUrl, // Store the public URL instead of base64
+        visibility: visibility || "public" // Set visibility with default as public
       };
 
       const validatedData = insertDocumentSchema.parse(documentData);

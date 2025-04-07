@@ -23,7 +23,8 @@ export const documents = pgTable("documents", {
   type: text("type").notNull(),
   description: text("description").notNull(),
   fileName: text("file_name").notNull(),
-  fileContent: text("file_content").notNull(), // Store file content as base64
+  fileContent: text("file_content").notNull(), 
+  visibility: text("visibility").notNull().default("public"), // public, protected, admin
   uploadDate: timestamp("upload_date").notNull().defaultNow(),
 });
 
