@@ -43,14 +43,21 @@ export default function Navbar() {
   const { accessLevel, setAccessLevel } = useAccessLevel();
 
   useEffect(() => {
+    if (accessLevel === "none") return;
+    if (location === "/documents") return;
+  
+    setAccessLevel("none");
+    setIsMenuOpen(false);
+  }, [location]);
+  
+
+  useEffect(() => {
     setIsHomePage(location === "/");
   }, [location]);
 
   useEffect(() => {
     const handleScroll = () => {
       const currentScrollPos = window.scrollY;
-
-      // Set navbar visible if scrolling up or at the top of the page
       const isVisible =
         prevScrollPos > currentScrollPos || currentScrollPos < 10;
 
@@ -66,7 +73,6 @@ export default function Navbar() {
     setIsMenuOpen(!isMenuOpen);
   };
 
-  // Handle sign out
   const handleSignOut = () => {
     setAccessLevel("none");
     setIsMenuOpen(false);
@@ -83,9 +89,7 @@ export default function Navbar() {
           <Link href="/">
             <div className="flex items-center cursor-pointer">
               <Sun className="mr-3 text-[#D4AF37]" size={30} />
-              <h1 className="font-bold text-2xl md:text-3xl">
-                Riverwood Ranch
-              </h1>
+              <h1 className="font-bold text-2xl md:text-3xl">Riverwood Ranch</h1>
             </div>
           </Link>
           <button
@@ -102,7 +106,6 @@ export default function Navbar() {
             className={`w-full md:w-auto ${isMenuOpen ? "block" : "hidden md:block"}`}
           >
             <ul className="flex flex-col md:flex-row gap-1 md:gap-6 text-sm md:text-base">
-              {/* Home page scroll links */}
               {isHomePage &&
                 scrollLinks.map((link) => (
                   <li key={link.name}>
@@ -119,7 +122,7 @@ export default function Navbar() {
                     </a>
                   </li>
                 ))}
-              {/* Access Level Badge and Sign Out - Only show when authenticated */}
+
               {accessLevel !== "none" && (
                 <div
                   className={`flex items-center mt-4 md:mt-0 md:ml-6 ${isMenuOpen ? "block" : "hidden md:flex"} pointer-events-none`}
@@ -131,13 +134,13 @@ export default function Navbar() {
                       </>
                     ) : (
                       <>
-                        <User className="mr-1 h-3 w-3 " /> Private
+                        <User className="mr-1 h-3 w-3" /> Private
                       </>
                     )}
                   </Badge>
                 </div>
               )}
-              {/* Page navigation links */}
+
               {pageLinks.map((link) => (
                 <li key={link.name}>
                   <Link href={link.href}>
@@ -153,7 +156,6 @@ export default function Navbar() {
                 </li>
               ))}
 
-              {/* Home link when not on homepage */}
               {!isHomePage && (
                 <li>
                   <Link href="/">

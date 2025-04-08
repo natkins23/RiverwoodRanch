@@ -1,7 +1,27 @@
+import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { ArrowRight, File, FileText, FileSpreadsheet, ClipboardList, MapPin, Calendar, Upload } from "lucide-react";
-import DocumentUpload from "./DocumentUpload";
+import {
+  File,
+  FileText,
+  FileSpreadsheet,
+  ClipboardList,
+  MapPin,
+  Calendar,
+  Upload,
+  ShieldCheck,
+  Eye,
+  Lock,
+  Trash2,
+  Archive,
+  Download,
+  ExternalLink,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import PasscodeLogin, {
+  AccessLevel as LoginAccessLevel,
+} from "@/components/PasscodeLogin";
+import { useAccessLevel } from "@/components/Navbar";
 import {
   Dialog,
   DialogContent,
@@ -10,195 +30,260 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import * as React from "react";
+import DocumentUpload from "@/components/DocumentUpload";
 import { Document } from "@shared/schema";
+import ScrollToTop from "@/components/ScrollToTop";
+import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
+import { access } from "fs";
 
 export default function Documents() {
+  const { accessLevel, setAccessLevel } = useAccessLevel();
+  const [activeTab, setActiveTab] = useState("all");
+  const [searchTerm, setSearchTerm] = useState("");
+
   const { data: documents, isLoading, error } = useQuery<Document[]>({
-    queryKey: ['/api/documents'],
+    queryKey: ["/api/documents"],
+    enabled: accessLevel !== "none",
   });
 
   const getDocumentIcon = (type: string) => {
     switch (type) {
-      case 'agreement':
-      case 'bylaw':
+      case "agreement":
+      case "bylaw":
         return <FileText className="text-[#8B5A2B] mr-3" size={24} />;
-      case 'financial':
+      case "financial":
         return <FileSpreadsheet className="text-[#8B5A2B] mr-3" size={24} />;
-      case 'minutes':
+      case "minutes":
         return <ClipboardList className="text-[#8B5A2B] mr-3" size={24} />;
-      case 'map':
+      case "map":
         return <MapPin className="text-[#8B5A2B] mr-3" size={24} />;
-      case 'schedule':
+      case "schedule":
         return <Calendar className="text-[#8B5A2B] mr-3" size={24} />;
       default:
         return <File className="text-[#8B5A2B] mr-3" size={24} />;
     }
   };
 
-  return (
-    <section id="documents" className="py-16 bg-[#F5F5DC] bg-opacity-50">
-      <div className="container mx-auto px-6">
-        <h2 className="text-3xl font-bold mb-8 text-center text-[#2C5E1A]">Ranch Documents</h2>
-        <p className="text-center max-w-3xl mx-auto mb-12">
-          Access important documents related to Riverwood Ranch. These resources provide guidelines, policies, and other essential information for property owners.
-        </p>
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {isLoading ? (
-            // Loading skeleton
-            Array(6).fill(0).map((_, index) => (
-              <div key={index} className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300 p-6">
-                <div className="animate-pulse flex flex-col">
-                  <div className="flex items-center mb-4">
-                    <div className="rounded-full bg-gray-200 h-10 w-10 mr-3"></div>
-                    <div className="h-4 bg-gray-200 rounded w-3/4"></div>
-                  </div>
-                  <div className="h-3 bg-gray-200 rounded w-full mb-2"></div>
-                  <div className="h-3 bg-gray-200 rounded w-5/6 mb-4"></div>
-                  <div className="flex justify-between items-center">
-                    <div className="h-2 bg-gray-200 rounded w-1/4"></div>
-                    <div className="h-2 bg-gray-200 rounded w-1/4"></div>
-                  </div>
-                </div>
+  const getVisibilityBadge = (visibility: string) => {
+    switch (visibility) {
+      case "public":
+        return (
+          <Badge variant="outline" className="flex items-center gap-1 bg-green-50 text-green-700 border-green-200">
+            <Eye className="h-3 w-3" /> Public
+          </Badge>
+        );
+      case "protected":
+        return (
+          <Badge variant="outline" className="flex items-center gap-1 bg-blue-50 text-blue-700 border-blue-200">
+            <Lock className="h-3 w-3" /> Private
+          </Badge>
+        );
+      case "admin":
+        return (
+          <Badge variant="outline" className="flex items-center gap-1 bg-amber-50 text-amber-700 border-amber-200">
+            <ShieldCheck className="h-3 w-3" /> Board
+          </Badge>
+        );
+      default:
+        return null;
+    }
+  };
+
+  const renderDocActions = (doc: Document) => (
+    <div className="flex space-x-3">
+      <a href={doc.fileContent} download target="_blank" rel="noopener noreferrer">
+        <Download className="w-4 h-4 text-gray-500 hover:text-[#2C5E1A]" />
+      </a>
+      <a href={doc.fileContent} target="_blank" rel="noopener noreferrer">
+        <ExternalLink className="w-4 h-4 text-gray-500 hover:text-[#2C5E1A]" />
+      </a>
+      {accessLevel === "admin" && (
+        <>
+          <button title="Archive">
+            <Archive className="w-4 h-4 text-gray-500 hover:text-amber-600" />
+          </button>
+          <button title="Delete">
+            <Trash2 className="w-4 h-4 text-gray-500 hover:text-red-500" />
+          </button>
+        </>
+      )}
+    </div>
+  );
+
+  const getFilteredDocuments = () => {
+    if (!documents) return [];
+
+    let filtered = documents;
+
+    if (activeTab !== "all") {
+      filtered = filtered.filter((doc) => doc.visibility === activeTab);
+    }
+
+    if (searchTerm) {
+      filtered = filtered.filter(
+        (doc) =>
+          doc.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          doc.description.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+    }
+
+    if (accessLevel === "user") {
+      return filtered.filter((doc) => doc.visibility === "public" || doc.visibility === "protected");
+    } else if (accessLevel === "admin") {
+      return filtered;
+    } else {
+      return [];
+    }
+  };
+
+  const handleLoginSuccess = (level: LoginAccessLevel) => {
+    setAccessLevel(level);
+  };
+
+  if (accessLevel === "none") {
+    return (
+      <div className="bg-[#F5F5DC] min-h-screen">
+        <Navbar />
+        <main className="pt-16 md:pt-20">
+          <section className="py-16 bg-[#F5F5DC] bg-opacity-50 min-h-screen">
+            <div className="container mx-auto px-6">
+              <h2 className="text-3xl font-bold mb-8 text-center text-[#2C5E1A]">Ranch Documents</h2>
+              <p className="text-center max-w-3xl mx-auto mb-8">
+                This section contains all current documents for Riverwood Ranch.
+              </p>
+              <div className="max-w-md mx-auto bg-white rounded-lg shadow-md overflow-hidden p-8">
+                <h3 className="text-xl font-semibold text-center mb-6 text-[#2C5E1A]">Document Access</h3>
+                <p className="text-sm text-gray-600 mb-8 text-center">
+                  Please enter your passcode to access ranch documents.<br /><br />
+                </p>
+                <PasscodeLogin onSuccess={handleLoginSuccess} />
               </div>
-            ))
-          ) : error ? (
-            <div className="col-span-3 text-center py-10">
-              <p className="text-red-500">Error loading documents. Please try again later.</p>
             </div>
-          ) : documents && documents.length > 0 ? (
-            documents.map((doc) => (
-              <div key={doc.id} className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300">
-                <div className="p-6">
-                  <div className="flex items-center mb-4">
-                    {getDocumentIcon(doc.type)}
-                    <h3 className="font-semibold text-lg">{doc.title}</h3>
-                  </div>
-                  <p className="text-sm mb-4 text-gray-600">{doc.description}</p>
-                  <div className="flex justify-between items-center">
-                    <span className="text-xs text-gray-500">
-                      Updated: {new Date(doc.uploadDate).toLocaleDateString()}
-                    </span>
-                    <a 
-                      href={doc.fileContent}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-[#2C5E1A] hover:text-[#4C8033] font-medium text-sm flex items-center"
-                    >
-                      View Document <ArrowRight className="ml-1 h-4 w-4" />
-                    </a>
-                  </div>
-                </div>
-              </div>
-            ))
-          ) : (
-            // Placeholder documents if no documents exist yet
-            <>
-              <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300">
-                <div className="p-6">
-                  <div className="flex items-center mb-4">
-                    <FileText className="text-[#8B5A2B] mr-3" size={24} />
-                    <h3 className="font-semibold text-lg">Road Maintenance Agreement</h3>
-                  </div>
-                  <p className="text-sm mb-4 text-gray-600">Details the responsibilities and cost-sharing arrangements for maintaining the shared roadways within Riverwood Ranch.</p>
-                  <div className="flex justify-between items-center">
-                    <span className="text-xs text-gray-500">Updated: Jan 15, 2023</span>
-                    <span className="text-[#2C5E1A] hover:text-[#4C8033] font-medium text-sm flex items-center">
-                      No Document Available
-                    </span>
-                  </div>
-                </div>
-              </div>
-              
-              <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300">
-                <div className="p-6">
-                  <div className="flex items-center mb-4">
-                    <FileText className="text-[#8B5A2B] mr-3" size={24} />
-                    <h3 className="font-semibold text-lg">Corporation Bylaws</h3>
-                  </div>
-                  <p className="text-sm mb-4 text-gray-600">Official bylaws governing the operation of the Riverwood Ranch Corporation, including decision-making processes.</p>
-                  <div className="flex justify-between items-center">
-                    <span className="text-xs text-gray-500">Updated: Mar 22, 2022</span>
-                    <span className="text-[#2C5E1A] hover:text-[#4C8033] font-medium text-sm flex items-center">
-                      No Document Available
-                    </span>
-                  </div>
-                </div>
-              </div>
-              
-              <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300">
-                <div className="p-6">
-                  <div className="flex items-center mb-4">
-                    <FileSpreadsheet className="text-[#8B5A2B] mr-3" size={24} />
-                    <h3 className="font-semibold text-lg">Annual Budget</h3>
-                  </div>
-                  <p className="text-sm mb-4 text-gray-600">Current fiscal year budget detailing planned expenditures for road maintenance and other community projects.</p>
-                  <div className="flex justify-between items-center">
-                    <span className="text-xs text-gray-500">Updated: Oct 5, 2023</span>
-                    <span className="text-[#2C5E1A] hover:text-[#4C8033] font-medium text-sm flex items-center">
-                      No Document Available
-                    </span>
-                  </div>
-                </div>
-              </div>
-
-              <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300">
-                <div className="p-6">
-                  <div className="flex items-center mb-4">
-                    <ClipboardList className="text-[#8B5A2B] mr-3" size={24} />
-                    <h3 className="font-semibold text-lg">Meeting Minutes</h3>
-                  </div>
-                  <p className="text-sm mb-4 text-gray-600">Records of board meetings, decisions made, and community discussions.</p>
-                  <div className="flex justify-between items-center">
-                    <span className="text-xs text-gray-500">Updated: Dec 1, 2023</span>
-                    <span className="text-[#2C5E1A] hover:text-[#4C8033] font-medium text-sm flex items-center">
-                      No Document Available
-                    </span>
-                  </div>
-                </div>
-              </div>
-
-              <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300">
-                <div className="p-6">
-                  <div className="flex items-center mb-4">
-                    <MapPin className="text-[#8B5A2B] mr-3" size={24} />
-                    <h3 className="font-semibold text-lg">Property Maps</h3>
-                  </div>
-                  <p className="text-sm mb-4 text-gray-600">Detailed maps showing property boundaries, roads, and common areas.</p>
-                  <div className="flex justify-between items-center">
-                    <span className="text-xs text-gray-500">Updated: Nov 15, 2023</span>
-                    <span className="text-[#2C5E1A] hover:text-[#4C8033] font-medium text-sm flex items-center">
-                      No Document Available
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </>
-          )}
-        </div>
-        
-        {/* Upload Document Button and Modal */}
-        <div className="mt-12 text-center">
-          <Dialog>
-            <DialogTrigger asChild>
-              <Button className="bg-[#2C5E1A] hover:bg-[#4C8033] text-white">
-                <Upload className="mr-2 h-4 w-4" />
-                Upload New Document
-              </Button>
-            </DialogTrigger>
-            <DialogContent>
-              <DialogHeader>
-                <DialogTitle className="text-[#2C5E1A]">Upload New Document</DialogTitle>
-                <DialogDescription>
-                  Board members can upload new documents for the community. All uploads require administrative approval.
-                </DialogDescription>
-              </DialogHeader>
-              <DocumentUpload />
-            </DialogContent>
-          </Dialog>
-        </div>
+          </section>
+        </main>
+        <Footer />
+        <ScrollToTop />
       </div>
-    </section>
+    );
+  }
+
+  const allFiltered = getFilteredDocuments();
+  const activeDocs = allFiltered.filter(doc => !doc.archived);
+  const archivedDocs = allFiltered.filter(doc => doc.archived);
+
+  return (
+    <div className="bg-[#F5F5DC] min-h-screen">
+      <Navbar />
+      <main className="pt-16 md:pt-20">
+        <section className="py-16 bg-[#F5F5DC] bg-opacity-50 min-h-screen">
+          <div className="container mx-auto px-6">
+            <h2 className="text-3xl font-bold text-[#2C5E1A] mb-4">Ranch Documents</h2>
+            <p className="text-start max-w-3xl  mb-6">
+              Access important documents related to Riverwood Ranch. These resources provide guidelines, policies, and other essential information for property owners.
+            </p>
+            <input
+              type="text"
+              placeholder="Search documents..."
+              className="block w-full max-w-md mx-auto mb-8 px-4 py-2 border border-gray-300 rounded-md shadow focus:outline-none focus:ring-2 focus:ring-[#2C5E1A]"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {isLoading ? (
+                Array(6).fill(0).map((_, index) => (
+                  <div key={index} className="bg-white rounded-lg shadow-md p-6 animate-pulse"></div>
+                ))
+              ) : error ? (
+                <div className="col-span-3 text-center py-10">
+                  <p className="text-red-500">Error loading documents. Please try again later.</p>
+                </div>
+              ) : activeDocs.length > 0 ? (
+                activeDocs.map((doc) => (
+                  <div key={doc.id} className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300">
+                    <div className="p-6">
+                      <div className="flex items-center justify-between mb-4">
+                        <div className="flex items-center">
+                          {getDocumentIcon(doc.type)}
+                          <h3 className="font-semibold text-lg">{doc.title}</h3>
+                        </div>
+                        {getVisibilityBadge(doc.visibility)}
+                      </div>
+                      <p className="text-sm mb-4 text-gray-600">{doc.description}</p>
+                      <div className="flex justify-between items-center">
+                        <span className="text-xs text-gray-500">
+                          Updated: {new Date(doc.uploadDate).toLocaleDateString()}
+                        </span>
+                        {renderDocActions(doc)}
+                      </div>
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <div className="col-span-3 text-center py-10">
+                  <p className="text-gray-500">No matching documents found.</p>
+                </div>
+              )}
+            </div>
+
+            {accessLevel === "admin" && archivedDocs.length > 0 && (
+              <>
+                <h3 className="text-xl font-semibold mb-4 mt-16 text-[#2C5E1A]">Archived</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {archivedDocs.map((doc) => (
+                    <div key={doc.id} className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300">
+                      <div className="p-6">
+                        <div className="flex items-center justify-between mb-4">
+                          <div className="flex items-center">
+                            {getDocumentIcon(doc.type)}
+                            <h3 className="font-semibold text-lg">{doc.title}</h3>
+                          </div>
+                          {getVisibilityBadge(doc.visibility)}
+                        </div>
+                        <p className="text-sm mb-4 text-gray-600">{doc.description}</p>
+                        <div className="flex justify-between items-center">
+                          <span className="text-xs text-gray-500">
+                            Updated: {new Date(doc.uploadDate).toLocaleDateString()}
+                          </span>
+                          {renderDocActions(doc)}
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </>
+            )}
+
+            {accessLevel === "admin" && (
+              <div className="mt-12 text-center">
+                <Dialog>
+                  <DialogTrigger asChild>
+                    <Button className="bg-[#2C5E1A] hover:bg-[#4C8033] text-white">
+                      <Upload className="mr-2 h-4 w-4" /> Upload New Document
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent>
+                    <DialogHeader>
+                      <DialogTitle className="text-[#2C5E1A]">Upload New Document</DialogTitle>
+                      <DialogDescription>
+                        As a board member, you can upload new documents for the community.
+                      </DialogDescription>
+                    </DialogHeader>
+                    <DocumentUpload accessLevel="admin" />
+                  </DialogContent>
+                </Dialog>
+              </div>
+            )}
+
+          {(accessLevel === "user" || accessLevel === "admin") && (
+             <h2 className="text-3xl font-bold text-[#2C5E1A] mb-4 py-16">Ranch Archive</h2>
+            )}
+          </div>
+        </section>
+      </main>
+      <Footer />
+      <ScrollToTop />
+    </div>
   );
 }

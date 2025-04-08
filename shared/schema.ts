@@ -26,6 +26,7 @@ export const documents = pgTable("documents", {
   fileContent: text("file_content").notNull(), 
   visibility: text("visibility").notNull().default("public"), // public, protected, admin
   uploadDate: timestamp("upload_date").notNull().defaultNow(),
+  archived: boolean("archived").notNull().default(false) // set by admin //viewable by users // hidden from public
 });
 
 export const insertDocumentSchema = createInsertSchema(documents).omit({

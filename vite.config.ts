@@ -34,5 +34,12 @@ export default defineConfig({
     watch: {
       usePolling: true,      // Ensures file change detection in cloud/dev envs
     },
+    proxy: {
+      "/api": {
+        target: "http://127.0.0.1:5000", // Force IPv4
+        changeOrigin: true,
+      },
+    },
   },
+  
 });
