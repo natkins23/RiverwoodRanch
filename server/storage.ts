@@ -206,8 +206,27 @@ export class MemStorage implements IStorage {
       // Save documents to file for persistence
       this.saveDocuments();
       
-      // TODO: If needed, also delete from Firebase Storage
-      // But for now we'll keep the file in Firebase and just remove from our list
+      // Attempt to delete from Firebase Storage if this is a real document
+      if (document.fileContent && document.fileContent.includes('storage.googleapis.com')) {
+        try {
+          // Extract the file path from the URL
+          const urlParts = document.fileContent.split('/');
+          const fileName = urlParts[urlParts.length - 1];
+          const filePath = `documents/${fileName}`;
+          
+          // Get reference to the file and delete it
+          const file = bucket.file(filePath);
+          await file.delete().catch((err) => {
+            console.error(`Failed to delete file ${filePath} from Firebase:`, err);
+          });
+          
+          console.log(`Deleted file ${filePath} from Firebase Storage`);
+        } catch (error) {
+          console.error("Error deleting file from Firebase:", error);
+          // We still return success even if Firebase deletion fails
+          // as the document is removed from our local storage
+        }
+      }
     }
     
     return success;

@@ -171,16 +171,16 @@ export default function Documents() {
             disabled={archiveMutation.isPending}
           >
             {doc.archived ? (
-              <RefreshCw className="w-4 h-4 text-gray-500 hover:text-green-600" />
+              <RefreshCw className="w-4 h-4 text-green-600 hover:text-green-700" />
             ) : (
-              <Archive className="w-4 h-4 text-gray-500 hover:text-amber-600" />
+              <Archive className="w-4 h-4 text-blue-600 hover:text-blue-700" />
             )}
           </button>
           
           <AlertDialog>
             <AlertDialogTrigger asChild>
               <button title="Delete">
-                <Trash2 className="w-4 h-4 text-gray-500 hover:text-red-500" />
+                <Trash2 className="w-4 h-4 text-red-600 hover:text-red-700" />
               </button>
             </AlertDialogTrigger>
             <AlertDialogContent>
@@ -305,19 +305,23 @@ export default function Documents() {
                 activeDocs.map((doc) => (
                   <div key={doc.id} className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300">
                     <div className="p-6">
-                      <div className="flex items-center justify-between mb-4">
+                      <div className="flex justify-between mb-1">
                         <div className="flex items-center">
                           {getDocumentIcon(doc.type)}
                           <h3 className="font-semibold text-lg">{doc.title}</h3>
                         </div>
+                        <div>
+                          {renderDocActions(doc)}
+                        </div>
+                      </div>
+                      <div className="mb-3 ml-9">
                         {getVisibilityBadge(doc.visibility)}
                       </div>
                       <p className="text-sm mb-4 text-gray-600">{doc.description}</p>
-                      <div className="flex justify-between items-center">
+                      <div className="flex justify-start items-center">
                         <span className="text-xs text-gray-500">
                           Updated: {new Date(doc.uploadDate).toLocaleDateString()}
                         </span>
-                        {renderDocActions(doc)}
                       </div>
                     </div>
                   </div>
@@ -336,19 +340,23 @@ export default function Documents() {
                   {archivedDocs.map((doc) => (
                     <div key={doc.id} className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300 bg-gray-50">
                       <div className="p-6">
-                        <div className="flex items-center justify-between mb-4">
+                        <div className="flex justify-between mb-1">
                           <div className="flex items-center">
                             {getDocumentIcon(doc.type)}
                             <h3 className="font-semibold text-lg">{doc.title}</h3>
                           </div>
+                          <div>
+                            {renderDocActions(doc)}
+                          </div>
+                        </div>
+                        <div className="mb-3 ml-9">
                           {getVisibilityBadge(doc.visibility)}
                         </div>
                         <p className="text-sm mb-4 text-gray-600">{doc.description}</p>
-                        <div className="flex justify-between items-center">
+                        <div className="flex justify-start items-center">
                           <span className="text-xs text-gray-500">
                             Updated: {new Date(doc.uploadDate).toLocaleDateString()}
                           </span>
-                          {renderDocActions(doc)}
                         </div>
                       </div>
                     </div>

@@ -7,7 +7,8 @@
     "fileName": "test.pdf",
     "fileContent": "https://storage.googleapis.com/riverwood-c3409.firebasestorage.app/documents/1744046576157-test.pdf",
     "uploadDate": "2025-04-07T17:22:56.726Z",
-    "visibility": "public"
+    "visibility": "public",
+    "archived": true
   },
   {
     "id": 4,
@@ -53,17 +54,6 @@
     "archived": true
   },
   {
-    "title": "rest test best",
-    "type": "bylaw",
-    "description": "dsadasdadsadasdadsadasda",
-    "fileName": "test.pdf",
-    "fileContent": "https://storage.googleapis.com/riverwood-c3409.firebasestorage.app/documents/1744100182997-test.pdf",
-    "visibility": "admin",
-    "id": 11,
-    "uploadDate": "2025-04-08T08:16:23.516Z",
-    "archived": false
-  },
-  {
     "id": 15,
     "title": "Test",
     "type": "other",
@@ -106,5 +96,27 @@
     "id": 18,
     "uploadDate": "2025-04-08T08:17:42.067Z",
     "archived": true
+  },
+  {
+    "id": 19,
+    "title": "Test",
+    "type": "other",
+    "description": "Uploaded on 4/8/2025",
+    "fileName": "test.pdf",
+    "fileContent": "https://storage.googleapis.com/riverwood-c3409.firebasestorage.app/documents/1744100182997-test.pdf",
+    "uploadDate": "2025-04-08T08:16:23.380Z",
+    "visibility": "public",
+    "archived": false
+  },
+  {
+    "id": 21,
+    "title": "Test",
+    "type": "other",
+    "description": "Uploaded on 4/8/2025",
+    "fileName": "test.pdf",
+    "fileContent": "https://storage.googleapis.com/riverwood-c3409.firebasestorage.app/documents/1744100500457-test.pdf",
+    "uploadDate": "2025-04-08T08:21:40.842Z",
+    "visibility": "public",
+    "archived": false
   }
 ]
