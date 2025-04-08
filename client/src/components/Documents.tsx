@@ -229,6 +229,7 @@ export default function Documents() {
       );
     }
 
+    // Filter by access level
     if (accessLevel === "user") {
       return filtered.filter((doc) => doc.visibility === "public" || doc.visibility === "protected");
     } else if (accessLevel === "admin") {
@@ -328,12 +329,12 @@ export default function Documents() {
               )}
             </div>
 
-            {accessLevel === "admin" && archivedDocs.length > 0 && (
+            {archivedDocs.length > 0 && (
               <>
-                <h3 className="text-xl font-semibold mb-4 mt-16 text-[#2C5E1A]">Archived</h3>
+                <h3 className="text-xl font-semibold mb-4 mt-16 text-[#2C5E1A]">Archived Documents</h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                   {archivedDocs.map((doc) => (
-                    <div key={doc.id} className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300">
+                    <div key={doc.id} className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300 bg-gray-50">
                       <div className="p-6">
                         <div className="flex items-center justify-between mb-4">
                           <div className="flex items-center">
@@ -375,10 +376,6 @@ export default function Documents() {
                   </DialogContent>
                 </Dialog>
               </div>
-            )}
-
-          {(accessLevel === "user" || accessLevel === "admin") && (
-             <h2 className="text-3xl font-bold text-[#2C5E1A] mb-4 py-16">Ranch Archive</h2>
             )}
           </div>
         </section>

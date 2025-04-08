@@ -10,26 +10,6 @@
     "visibility": "public"
   },
   {
-    "title": "test2",
-    "type": "agreement",
-    "description": "tesssssssssssssssssssssssssssss",
-    "fileName": "test.pdf",
-    "fileContent": "https://storage.googleapis.com/riverwood-c3409.firebasestorage.app/documents/1744049713808-test.pdf",
-    "visibility": "protected",
-    "id": 2,
-    "uploadDate": "2025-04-07T18:15:14.278Z"
-  },
-  {
-    "id": 3,
-    "title": "Test",
-    "type": "other",
-    "description": "Uploaded on 4/8/2025",
-    "fileName": "test.pdf",
-    "fileContent": "https://storage.googleapis.com/riverwood-c3409.firebasestorage.app/documents/1744090912997-test.pdf",
-    "uploadDate": "2025-04-08T05:41:53.489Z",
-    "visibility": "public"
-  },
-  {
     "id": 4,
     "title": "Test",
     "type": "other",
@@ -37,17 +17,8 @@
     "fileName": "test.pdf",
     "fileContent": "https://storage.googleapis.com/riverwood-c3409.firebasestorage.app/documents/1744090928070-test.pdf",
     "uploadDate": "2025-04-08T05:42:08.469Z",
-    "visibility": "public"
-  },
-  {
-    "id": 5,
-    "title": "Test",
-    "type": "other",
-    "description": "Uploaded on 4/8/2025",
-    "fileName": "test.pdf",
-    "fileContent": "https://storage.googleapis.com/riverwood-c3409.firebasestorage.app/documents/1744094236768-test.pdf",
-    "uploadDate": "2025-04-08T06:37:17.189Z",
-    "visibility": "public"
+    "visibility": "public",
+    "archived": true
   },
   {
     "id": 6,
@@ -60,23 +31,80 @@
     "visibility": "public"
   },
   {
-    "id": 7,
+    "id": 9,
     "title": "Test",
     "type": "other",
     "description": "Uploaded on 4/8/2025",
     "fileName": "test.pdf",
     "fileContent": "https://storage.googleapis.com/riverwood-c3409.firebasestorage.app/documents/1744097723386-test.pdf",
     "uploadDate": "2025-04-08T07:35:23.971Z",
-    "visibility": "public"
+    "visibility": "public",
+    "archived": true
   },
   {
-    "id": 8,
+    "id": 10,
     "title": "Test",
     "type": "other",
     "description": "Uploaded on 4/8/2025",
     "fileName": "test.pdf",
     "fileContent": "https://storage.googleapis.com/riverwood-c3409.firebasestorage.app/documents/1744097746267-test.pdf",
     "uploadDate": "2025-04-08T07:35:46.788Z",
-    "visibility": "public"
+    "visibility": "public",
+    "archived": true
+  },
+  {
+    "title": "rest test best",
+    "type": "bylaw",
+    "description": "dsadasdadsadasdadsadasda",
+    "fileName": "test.pdf",
+    "fileContent": "https://storage.googleapis.com/riverwood-c3409.firebasestorage.app/documents/1744100182997-test.pdf",
+    "visibility": "admin",
+    "id": 11,
+    "uploadDate": "2025-04-08T08:16:23.516Z",
+    "archived": false
+  },
+  {
+    "id": 15,
+    "title": "Test",
+    "type": "other",
+    "description": "Uploaded on 4/8/2025",
+    "fileName": "test.pdf",
+    "fileContent": "https://storage.googleapis.com/riverwood-c3409.firebasestorage.app/documents/1744094236768-test.pdf",
+    "uploadDate": "2025-04-08T06:37:17.189Z",
+    "visibility": "public",
+    "archived": false
+  },
+  {
+    "id": 16,
+    "title": "Test",
+    "type": "other",
+    "description": "Uploaded on 4/7/2025",
+    "fileName": "test.pdf",
+    "fileContent": "https://storage.googleapis.com/riverwood-c3409.firebasestorage.app/documents/1744049713808-test.pdf",
+    "uploadDate": "2025-04-07T18:15:14.149Z",
+    "visibility": "public",
+    "archived": false
+  },
+  {
+    "id": 17,
+    "title": "Test",
+    "type": "other",
+    "description": "Uploaded on 4/8/2025",
+    "fileName": "test.pdf",
+    "fileContent": "https://storage.googleapis.com/riverwood-c3409.firebasestorage.app/documents/1744090912997-test.pdf",
+    "uploadDate": "2025-04-08T05:41:53.489Z",
+    "visibility": "public",
+    "archived": false
+  },
+  {
+    "title": "meeting minutes",
+    "type": "minutes",
+    "description": "testtttttttttttttttttttttttttttttttt",
+    "fileName": "test.pdf",
+    "fileContent": "https://storage.googleapis.com/riverwood-c3409.firebasestorage.app/documents/1744100261427-test.pdf",
+    "visibility": "protected",
+    "id": 18,
+    "uploadDate": "2025-04-08T08:17:42.067Z",
+    "archived": true
   }
 ]
