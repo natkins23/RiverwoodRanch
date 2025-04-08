@@ -45,6 +45,7 @@ export class MemStorage implements IStorage {
   private boardMembers: Map<number, BoardMember>;
   private contactSubmissions: Map<number, ContactSubmission>;
   private newsletterSubscriptions: Map<number, NewsletterSubscription>;
+  private deletedFileUrls: Set<string>; // Track deleted file URLs to prevent re-sync
   currentId: number;
   currentDocumentId: number;
   currentBoardMemberId: number;
@@ -59,6 +60,7 @@ export class MemStorage implements IStorage {
     this.boardMembers = new Map();
     this.contactSubmissions = new Map();
     this.newsletterSubscriptions = new Map();
+    this.deletedFileUrls = new Set<string>(); // Initialize the set for deleted URLs
     this.currentId = 1;
     this.currentDocumentId = 1;
     this.currentBoardMemberId = 1;
@@ -209,22 +211,39 @@ export class MemStorage implements IStorage {
       // Attempt to delete from Firebase Storage if this is a real document
       if (document.fileContent && document.fileContent.includes('storage.googleapis.com')) {
         try {
-          // Extract the file path from the URL
-          const urlParts = document.fileContent.split('/');
-          const fileName = urlParts[urlParts.length - 1];
-          const filePath = `documents/${fileName}`;
+          // Add to deleted URLs set to prevent re-creation during sync
+          this.deletedFileUrls.add(document.fileContent);
+          
+          // Parse the file path from the storage URL
+          // Format: https://storage.googleapis.com/BUCKET_NAME/documents/FILENAME
+          const fileUrl = new URL(document.fileContent);
+          const pathParts = fileUrl.pathname.split('/');
+          
+          // Get the actual file path after the bucket name
+          // The pathname will be like /BUCKET_NAME/documents/filename.pdf
+          // We want to extract "documents/filename.pdf"
+          const filePath = pathParts.slice(2).join('/');
+          
+          console.log(`Attempting to delete file: ${filePath}`);
           
           // Get reference to the file and delete it
           const file = bucket.file(filePath);
-          await file.delete().catch((err) => {
-            console.error(`Failed to delete file ${filePath} from Firebase:`, err);
-          });
           
-          console.log(`Deleted file ${filePath} from Firebase Storage`);
+          // Use a promise to properly await deletion
+          await file.delete()
+            .then(() => {
+              console.log(`Successfully deleted file ${filePath} from Firebase Storage`);
+            })
+            .catch((err) => {
+              console.error(`Failed to delete file ${filePath} from Firebase:`, err);
+              // Still mark this URL as deleted to prevent recreation
+              this.deletedFileUrls.add(document.fileContent);
+            });
+          
         } catch (error) {
           console.error("Error deleting file from Firebase:", error);
-          // We still return success even if Firebase deletion fails
-          // as the document is removed from our local storage
+          // Still mark this URL as deleted to prevent recreation during sync
+          this.deletedFileUrls.add(document.fileContent);
         }
       }
     }
@@ -348,6 +367,12 @@ export class MemStorage implements IStorage {
           // Get the public URL
           await file.makePublic();
           const publicUrl = format(`https://storage.googleapis.com/${bucket.name}/${file.name}`);
+          
+          // Skip if this URL is in our deleted URLs list or we already have it
+          if (this.deletedFileUrls.has(publicUrl)) {
+            console.log(`Skipping deleted document: ${file.name}`);
+            continue;
+          }
           
           // Skip if we already have this document
           if (existingUrls.has(publicUrl)) {
