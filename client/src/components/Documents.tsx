@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
+import { queryClient } from "@/lib/queryClient";
 import {
   File,
   FileText,
@@ -136,6 +137,14 @@ export default function Documents() {
 
   const handleDelete = async (id: number) => {
     try {
+      // Optimistically update UI by filtering out the deleted document
+      if (documents) {
+        const updatedDocuments = documents.filter(doc => doc.id !== id);
+        // Update the local cache immediately for a responsive UI
+        queryClient.setQueryData(['/api/documents'], updatedDocuments);
+      }
+      
+      // Then actually delete it on the server
       await deleteMutation.mutateAsync(id);
       
       toast({
@@ -152,6 +161,9 @@ export default function Documents() {
         description: "There was an error deleting the document.",
         variant: "destructive"
       });
+      
+      // Refresh the documents in case of failure
+      queryClient.invalidateQueries({ queryKey: ['/api/documents'] });
     }
   };
 
