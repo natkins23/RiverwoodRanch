@@ -7,7 +7,11 @@ import runtimeErrorOverlay from "@replit/vite-plugin-runtime-error-modal";
 // Needed for top-level await
 const cartographerPlugin =
   process.env.NODE_ENV !== "production" && process.env.REPL_ID !== undefined
-    ? [await import("@replit/vite-plugin-cartographer").then((m) => m.cartographer())]
+    ? [
+        await import("@replit/vite-plugin-cartographer").then((m) =>
+          m.cartographer(),
+        ),
+      ]
     : [];
 
 export default defineConfig({
@@ -30,9 +34,9 @@ export default defineConfig({
     emptyOutDir: true,
   },
   server: {
-    host: "0.0.0.0",         // Required on Replit for public access
+    host: "0.0.0.0", // Required on Replit for public access
     watch: {
-      usePolling: true,      // Ensures file change detection in cloud/dev envs
+      usePolling: true, // Ensures file change detection in cloud/dev envs
     },
     proxy: {
       "/api": {
@@ -40,6 +44,8 @@ export default defineConfig({
         changeOrigin: true,
       },
     },
+    allowedHosts: [
+      "5610fe83-a169-4adb-a5a6-a905b1df0192-00-2jecbczicnbhq.picard.replit.dev",
+    ],
   },
-  
 });
