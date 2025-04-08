@@ -138,6 +138,46 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.status(500).json({ message: "Failed to upload document" });
     }
   });
+  
+  // Archive/Unarchive a document
+  app.patch("/api/documents/:id/archive", async (req: Request, res: Response) => {
+    try {
+      const id = parseInt(req.params.id);
+      const { archived } = req.body;
+      
+      if (typeof archived !== 'boolean') {
+        return res.status(400).json({ message: "Archive status must be a boolean" });
+      }
+      
+      const document = await storage.updateDocumentArchiveStatus(id, archived);
+      
+      if (!document) {
+        return res.status(404).json({ message: "Document not found" });
+      }
+      
+      res.json(document);
+    } catch (error) {
+      console.error("Error updating document archive status:", error);
+      res.status(500).json({ message: "Failed to update document archive status" });
+    }
+  });
+  
+  // Delete a document
+  app.delete("/api/documents/:id", async (req: Request, res: Response) => {
+    try {
+      const id = parseInt(req.params.id);
+      const success = await storage.deleteDocument(id);
+      
+      if (!success) {
+        return res.status(404).json({ message: "Document not found" });
+      }
+      
+      res.json({ message: "Document deleted successfully" });
+    } catch (error) {
+      console.error("Error deleting document:", error);
+      res.status(500).json({ message: "Failed to delete document" });
+    }
+  });
 
   // Get all board members
   app.get("/api/board-members", async (req: Request, res: Response) => {

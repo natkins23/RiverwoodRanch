@@ -19,6 +19,8 @@ export interface IStorage {
   getAllDocuments(): Promise<Document[]>;
   getDocumentById(id: number): Promise<Document | undefined>;
   createDocument(document: InsertDocument): Promise<Document>;
+  updateDocumentArchiveStatus(id: number, archived: boolean): Promise<Document | undefined>;
+  deleteDocument(id: number): Promise<boolean>;
   syncWithFirebase(): Promise<void>; // New method to sync with Firebase
   
   // Board member methods
@@ -155,7 +157,8 @@ export class MemStorage implements IStorage {
       ...insertDocument, 
       visibility, // Explicitly set visibility
       id, 
-      uploadDate: new Date() 
+      uploadDate: new Date(),
+      archived: false // Explicitly set archived to false for new documents
     };
     this.documents.set(id, document);
     
@@ -163,6 +166,51 @@ export class MemStorage implements IStorage {
     this.saveDocuments();
     
     return document;
+  }
+  
+  // Update document archive status
+  async updateDocumentArchiveStatus(id: number, archived: boolean): Promise<Document | undefined> {
+    const document = this.documents.get(id);
+    
+    if (!document) {
+      return undefined;
+    }
+    
+    // Update the archive status
+    const updatedDocument: Document = {
+      ...document,
+      archived
+    };
+    
+    // Save the updated document
+    this.documents.set(id, updatedDocument);
+    
+    // Save documents to file for persistence
+    this.saveDocuments();
+    
+    return updatedDocument;
+  }
+  
+  // Delete document
+  async deleteDocument(id: number): Promise<boolean> {
+    const document = this.documents.get(id);
+    
+    if (!document) {
+      return false;
+    }
+    
+    // Delete the document from our map
+    const success = this.documents.delete(id);
+    
+    if (success) {
+      // Save documents to file for persistence
+      this.saveDocuments();
+      
+      // TODO: If needed, also delete from Firebase Storage
+      // But for now we'll keep the file in Firebase and just remove from our list
+    }
+    
+    return success;
   }
   
   // Board member methods
@@ -334,7 +382,8 @@ export class MemStorage implements IStorage {
             fileName: originalName,
             fileContent: publicUrl,
             uploadDate: createTime,
-            visibility: 'public' // Default to public visibility
+            visibility: 'public', // Default to public visibility
+            archived: false // Default to not archived
           };
           
           // Add to our document map

@@ -32,3 +32,31 @@ export function useDocumentUpload() {
 
   return uploadMutation;
 }
+
+export function useDocumentArchive() {
+  const archiveMutation = useMutation({
+    mutationFn: async ({ id, archived }: { id: number; archived: boolean }) => {
+      const response = await apiRequest("PATCH", `/api/documents/${id}/archive`, { archived });
+      return response.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/documents'] });
+    },
+  });
+
+  return archiveMutation;
+}
+
+export function useDocumentDelete() {
+  const deleteMutation = useMutation({
+    mutationFn: async (id: number) => {
+      const response = await apiRequest("DELETE", `/api/documents/${id}`);
+      return response.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/documents'] });
+    },
+  });
+
+  return deleteMutation;
+}

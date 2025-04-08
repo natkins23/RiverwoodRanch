@@ -15,6 +15,8 @@ import {
   Archive,
   Download,
   ExternalLink,
+  RefreshCw,
+  AlertTriangle
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -29,18 +31,38 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
+  DialogFooter,
+  DialogClose
 } from "@/components/ui/dialog";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+import { useToast } from "@/hooks/use-toast";
 import DocumentUpload from "@/components/DocumentUpload";
 import { Document } from "@shared/schema";
 import ScrollToTop from "@/components/ScrollToTop";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import { access } from "fs";
+import { useDocumentArchive, useDocumentDelete } from "@/hooks/use-documents";
 
 export default function Documents() {
   const { accessLevel, setAccessLevel } = useAccessLevel();
   const [activeTab, setActiveTab] = useState("all");
   const [searchTerm, setSearchTerm] = useState("");
+  const [documentToDelete, setDocumentToDelete] = useState<Document | null>(null);
+  const { toast } = useToast();
+  
+  // Mutations for archive and delete
+  const archiveMutation = useDocumentArchive();
+  const deleteMutation = useDocumentDelete();
 
   const { data: documents, isLoading, error } = useQuery<Document[]>({
     queryKey: ["/api/documents"],
@@ -90,6 +112,49 @@ export default function Documents() {
     }
   };
 
+  const handleArchiveToggle = async (doc: Document) => {
+    try {
+      await archiveMutation.mutateAsync({ 
+        id: doc.id, 
+        archived: !doc.archived 
+      });
+      
+      toast({
+        title: doc.archived ? "Document Restored" : "Document Archived",
+        description: `"${doc.title}" has been ${doc.archived ? "restored" : "archived"}.`,
+        variant: "default"
+      });
+    } catch (error) {
+      console.error("Error toggling archive status:", error);
+      toast({
+        title: "Action Failed",
+        description: "There was an error processing your request.",
+        variant: "destructive"
+      });
+    }
+  };
+
+  const handleDelete = async (id: number) => {
+    try {
+      await deleteMutation.mutateAsync(id);
+      
+      toast({
+        title: "Document Deleted",
+        description: "The document has been permanently deleted.",
+        variant: "default"
+      });
+      
+      setDocumentToDelete(null);
+    } catch (error) {
+      console.error("Error deleting document:", error);
+      toast({
+        title: "Deletion Failed",
+        description: "There was an error deleting the document.",
+        variant: "destructive"
+      });
+    }
+  };
+
   const renderDocActions = (doc: Document) => (
     <div className="flex space-x-3">
       <a href={doc.fileContent} download target="_blank" rel="noopener noreferrer">
@@ -100,12 +165,48 @@ export default function Documents() {
       </a>
       {accessLevel === "admin" && (
         <>
-          <button title="Archive">
-            <Archive className="w-4 h-4 text-gray-500 hover:text-amber-600" />
+          <button 
+            title={doc.archived ? "Restore" : "Archive"} 
+            onClick={() => handleArchiveToggle(doc)}
+            disabled={archiveMutation.isPending}
+          >
+            {doc.archived ? (
+              <RefreshCw className="w-4 h-4 text-gray-500 hover:text-green-600" />
+            ) : (
+              <Archive className="w-4 h-4 text-gray-500 hover:text-amber-600" />
+            )}
           </button>
-          <button title="Delete">
-            <Trash2 className="w-4 h-4 text-gray-500 hover:text-red-500" />
-          </button>
+          
+          <AlertDialog>
+            <AlertDialogTrigger asChild>
+              <button title="Delete">
+                <Trash2 className="w-4 h-4 text-gray-500 hover:text-red-500" />
+              </button>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                <AlertDialogDescription>
+                  This action will permanently delete the document <strong>{doc.title}</strong>.
+                  This action cannot be undone.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                <AlertDialogAction
+                  onClick={() => handleDelete(doc.id)}
+                  className="bg-red-600 hover:bg-red-700 focus:ring-red-600"
+                >
+                  {deleteMutation.isPending ? (
+                    <RefreshCw className="mr-2 h-4 w-4 animate-spin" />
+                  ) : (
+                    <Trash2 className="mr-2 h-4 w-4" />
+                  )}
+                  Delete
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
         </>
       )}
     </div>
