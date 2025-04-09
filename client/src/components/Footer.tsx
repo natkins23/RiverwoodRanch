@@ -4,7 +4,7 @@ import {
   MapPin, 
   Mail
 } from "lucide-react";
-import { scrollToElement, scrollToElementWithOffset } from "@/lib/utils";
+import { scrollToElement, scrollToElementWithNavbarOffset, scrollToElementWithOffset } from "@/lib/utils";
 
 export default function Footer() {
   const [location, setLocation] = useLocation();
@@ -13,12 +13,12 @@ export default function Footer() {
   const handleNavigation = (e: React.MouseEvent<HTMLAnchorElement>, sectionId: string) => {
     e.preventDefault();
     if (isHomePage) {
-      scrollToElementWithOffset(sectionId);
+      scrollToElementWithNavbarOffset(sectionId);
     } else {
       setLocation("/");
       // Wait for navigation to complete before scrolling
       setTimeout(() => {
-        scrollToElementWithOffset(sectionId);
+        scrollToElementWithNavbarOffset(sectionId);
       }, 100);
     }
   };

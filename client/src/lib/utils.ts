@@ -14,17 +14,24 @@ export const scrollToElement = (elementId: string) => {
   }
 };
 
-// Scroll function with minimal navbar offset for navbar links
+// Adaptive scroll function that adjusts offset based on scroll direction
 export const scrollToElementWithNavbarOffset = (elementId: string) => {
   const element = document.getElementById(elementId);
   if (element) {
-    // Use a 20px offset for navbar links
-    const offset = 20;
+    // Get current scroll position
+    const currentScrollPos = window.pageYOffset;
+    // Get element position
+    const elementPosition = element.getBoundingClientRect().top + currentScrollPos;
     
-    // Calculate the element's position relative to the top of the document
-    const elementPosition = element.getBoundingClientRect().top + window.pageYOffset;
+    // Determine if we're scrolling up or down
+    const isScrollingDown = elementPosition > currentScrollPos;
     
-    // Scroll to element with offset to account for navbar height
+    // Apply different offsets based on scroll direction
+    // When scrolling down, use minimal offset
+    // When scrolling up, use larger offset to account for navbar
+    const offset = isScrollingDown ? 0 : 60;
+    
+    // Scroll to element with calculated offset
     window.scrollTo({
       top: elementPosition - offset,
       behavior: 'smooth'
@@ -36,13 +43,15 @@ export const scrollToElementWithNavbarOffset = (elementId: string) => {
 export const scrollToElementWithOffset = (elementId: string) => {
   const element = document.getElementById(elementId);
   if (element) {
-    // Use a 70px offset for footer links
+    // Get current scroll position
+    const currentScrollPos = window.pageYOffset;
+    // Get element position
+    const elementPosition = element.getBoundingClientRect().top + currentScrollPos;
+    
+    // Use a consistent 70px offset for footer links
     const offset = 70;
     
-    // Calculate the element's position relative to the top of the document
-    const elementPosition = element.getBoundingClientRect().top + window.pageYOffset;
-    
-    // Scroll to element with offset to account for navbar height and padding
+    // Scroll to element with offset
     window.scrollTo({
       top: elementPosition - offset,
       behavior: 'smooth'
