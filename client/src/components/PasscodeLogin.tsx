@@ -55,9 +55,9 @@ export default function PasscodeLogin({ onSuccess }: PasscodeLoginProps) {
       
       if (data.success) {
         const accessLevel = data.accessLevel as AccessLevel;
+        // Only call onSuccess without duplicating the redirection
         onSuccess(accessLevel);
         
-        setLocation("/ranch-portal");
         toast({
           title: accessLevel === "admin" 
             ? "Welcome, Board Member" 
