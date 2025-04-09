@@ -61,7 +61,7 @@ export default function PasscodeLogin({ onSuccess }: PasscodeLoginProps) {
   return (
     <DialogContent className="sm:max-w-[425px]">
       <DialogHeader>
-        <DialogTitle className="flex text-xl  items-center">
+        <DialogTitle className="flex text-xl items-center justify-center">
           Enter Password
         </DialogTitle>
         <DialogDescription>
@@ -83,7 +83,7 @@ export default function PasscodeLogin({ onSuccess }: PasscodeLoginProps) {
         <Button
           type="submit"
           className="w-full bg-[#2C5E1A] hover:bg-[#4C8033]"
-          disabled={isLoading || passcode.length !== 4}
+          disabled={isLoading || passcode.length === 0}
         >
           {isLoading ? "Verifying..." : "Submit"}
         </Button>
