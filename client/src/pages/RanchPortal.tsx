@@ -27,6 +27,7 @@ export default function RanchPortal() {
   const [location, setLocation] = useLocation();
   const [isAddEventOpen, setIsAddEventOpen] = useState(false);
   const [isNewPostOpen, setIsNewPostOpen] = useState(false);
+  const [isEditBoardOpen, setIsEditBoardOpen] = useState(false);
   const [newEvent, setNewEvent] = useState<Omit<Event, "id" | "createdAt">>({
     title: "",
     date: "",
@@ -302,7 +303,7 @@ export default function RanchPortal() {
                     <h2 className="text-xl font-semibold">Board Members</h2>
                   </div>
                   {accessLevel === 'admin' && (
-                    <Dialog>
+                    <Dialog open={isEditBoardOpen} onOpenChange={setIsEditBoardOpen}>
                       <DialogTrigger asChild>
                         <Button className="flex items-center gap-2">
                           <Edit className="h-4 w-4" />
@@ -403,7 +404,7 @@ export default function RanchPortal() {
                                   body: JSON.stringify(boardMembers)
                                 });
                                 queryClient.invalidateQueries({ queryKey: ['/api/board-members'] });
-                                setIsEditModalOpen(false);
+                                setIsEditBoardOpen(false);
                               } catch (error) {
                                 console.error('Failed to save board members:', error);
                               }
