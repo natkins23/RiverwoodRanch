@@ -365,84 +365,110 @@ export default function Records() {
               </div>
             )}
 
-            <div className="mb-6 grid grid-cols-1 md:grid-cols-7 gap-4">
-              <Button
-                variant={activeCategory === "all" ? "default" : "outline"}
-                className={
-                  activeCategory === "all"
-                    ? "bg-[#2C5E1A] hover:bg-[#4C8033] col-span-1"
-                    : "col-span-1"
-                }
-                onClick={() => setActiveCategory("all")}
+            <div className="mb-8 flex flex-wrap gap-2 mt-1">
+              <button
+                onClick={() => setActiveCategory('all')}
+                className={`px-4 py-2 rounded-full text-sm font-medium flex items-center space-x-1 border ${
+                  activeCategory === 'all'
+                    ? 'bg-[#2C5E1A] text-white border-[#2C5E1A]'
+                    : 'bg-white border-gray-300 hover:bg-gray-50'
+                }`}
               >
-                All
-              </Button>
-              <Button
-                variant={activeCategory === "agreement" ? "default" : "outline"}
-                className={
-                  activeCategory === "agreement"
-                    ? "bg-[#2C5E1A] hover:bg-[#4C8033] col-span-1"
-                    : "col-span-1"
-                }
-                onClick={() => setActiveCategory("agreement")}
+                <span>All</span>
+                <span className="ml-1.5 inline-flex items-center justify-center bg-opacity-50 rounded-full text-xs font-semibold h-5 min-w-[20px] px-1 bg-white text-[#2C5E1A]">
+                  {records?.length || 0}
+                </span>
+              </button>
+              
+              <button
+                onClick={() => setActiveCategory('agreement')}
+                className={`px-4 py-2 rounded-full text-sm font-medium flex items-center space-x-1 border ${
+                  activeCategory === 'agreement'
+                    ? 'bg-[#2C5E1A] text-white border-[#2C5E1A]'
+                    : 'bg-white border-gray-300 hover:bg-gray-50'
+                }`}
               >
-                Agreements
-              </Button>
-              <Button
-                variant={activeCategory === "bylaw" ? "default" : "outline"}
-                className={
-                  activeCategory === "bylaw"
-                    ? "bg-[#2C5E1A] hover:bg-[#4C8033] col-span-1"
-                    : "col-span-1"
-                }
-                onClick={() => setActiveCategory("bylaw")}
+                <FileText className="w-4 h-4 mr-1" />
+                <span>Agreements</span>
+                <span className="ml-1.5 inline-flex items-center justify-center bg-opacity-50 rounded-full text-xs font-semibold h-5 min-w-[20px] px-1 bg-white text-[#2C5E1A]">
+                  {records?.filter(doc => doc.type === 'agreement').length || 0}
+                </span>
+              </button>
+              
+              <button
+                onClick={() => setActiveCategory('bylaw')}
+                className={`px-4 py-2 rounded-full text-sm font-medium flex items-center space-x-1 border ${
+                  activeCategory === 'bylaw'
+                    ? 'bg-[#2C5E1A] text-white border-[#2C5E1A]'
+                    : 'bg-white border-gray-300 hover:bg-gray-50'
+                }`}
               >
-                Bylaws
-              </Button>
-              <Button
-                variant={activeCategory === "financial" ? "default" : "outline"}
-                className={
-                  activeCategory === "financial"
-                    ? "bg-[#2C5E1A] hover:bg-[#4C8033] col-span-1"
-                    : "col-span-1"
-                }
-                onClick={() => setActiveCategory("financial")}
+                <FileText className="w-4 h-4 mr-1" />
+                <span>Bylaws</span>
+                <span className="ml-1.5 inline-flex items-center justify-center bg-opacity-50 rounded-full text-xs font-semibold h-5 min-w-[20px] px-1 bg-white text-[#2C5E1A]">
+                  {records?.filter(doc => doc.type === 'bylaw').length || 0}
+                </span>
+              </button>
+              
+              <button
+                onClick={() => setActiveCategory('financial')}
+                className={`px-4 py-2 rounded-full text-sm font-medium flex items-center space-x-1 border ${
+                  activeCategory === 'financial'
+                    ? 'bg-[#2C5E1A] text-white border-[#2C5E1A]'
+                    : 'bg-white border-gray-300 hover:bg-gray-50'
+                }`}
               >
-                Financial
-              </Button>
-              <Button
-                variant={activeCategory === "minutes" ? "default" : "outline"}
-                className={
-                  activeCategory === "minutes"
-                    ? "bg-[#2C5E1A] hover:bg-[#4C8033] col-span-1"
-                    : "col-span-1"
-                }
-                onClick={() => setActiveCategory("minutes")}
+                <FileSpreadsheet className="w-4 h-4 mr-1" />
+                <span>Financial</span>
+                <span className="ml-1.5 inline-flex items-center justify-center bg-opacity-50 rounded-full text-xs font-semibold h-5 min-w-[20px] px-1 bg-white text-[#2C5E1A]">
+                  {records?.filter(doc => doc.type === 'financial').length || 0}
+                </span>
+              </button>
+              
+              <button
+                onClick={() => setActiveCategory('minutes')}
+                className={`px-4 py-2 rounded-full text-sm font-medium flex items-center space-x-1 border ${
+                  activeCategory === 'minutes'
+                    ? 'bg-[#2C5E1A] text-white border-[#2C5E1A]'
+                    : 'bg-white border-gray-300 hover:bg-gray-50'
+                }`}
               >
-                Minutes
-              </Button>
-              <Button
-                variant={activeCategory === "map" ? "default" : "outline"}
-                className={
-                  activeCategory === "map"
-                    ? "bg-[#2C5E1A] hover:bg-[#4C8033] col-span-1"
-                    : "col-span-1"
-                }
-                onClick={() => setActiveCategory("map")}
+                <ClipboardList className="w-4 h-4 mr-1" />
+                <span>Minutes</span>
+                <span className="ml-1.5 inline-flex items-center justify-center bg-opacity-50 rounded-full text-xs font-semibold h-5 min-w-[20px] px-1 bg-white text-[#2C5E1A]">
+                  {records?.filter(doc => doc.type === 'minutes').length || 0}
+                </span>
+              </button>
+              
+              <button
+                onClick={() => setActiveCategory('map')}
+                className={`px-4 py-2 rounded-full text-sm font-medium flex items-center space-x-1 border ${
+                  activeCategory === 'map'
+                    ? 'bg-[#2C5E1A] text-white border-[#2C5E1A]'
+                    : 'bg-white border-gray-300 hover:bg-gray-50'
+                }`}
               >
-                Maps
-              </Button>
-              <Button
-                variant={activeCategory === "schedule" ? "default" : "outline"}
-                className={
-                  activeCategory === "schedule"
-                    ? "bg-[#2C5E1A] hover:bg-[#4C8033] col-span-1"
-                    : "col-span-1"
-                }
-                onClick={() => setActiveCategory("schedule")}
+                <MapPin className="w-4 h-4 mr-1" />
+                <span>Maps</span>
+                <span className="ml-1.5 inline-flex items-center justify-center bg-opacity-50 rounded-full text-xs font-semibold h-5 min-w-[20px] px-1 bg-white text-[#2C5E1A]">
+                  {records?.filter(doc => doc.type === 'map').length || 0}
+                </span>
+              </button>
+              
+              <button
+                onClick={() => setActiveCategory('schedule')}
+                className={`px-4 py-2 rounded-full text-sm font-medium flex items-center space-x-1 border ${
+                  activeCategory === 'schedule'
+                    ? 'bg-[#2C5E1A] text-white border-[#2C5E1A]'
+                    : 'bg-white border-gray-300 hover:bg-gray-50'
+                }`}
               >
-                Schedules
-              </Button>
+                <Calendar className="w-4 h-4 mr-1" />
+                <span>Schedules</span>
+                <span className="ml-1.5 inline-flex items-center justify-center bg-opacity-50 rounded-full text-xs font-semibold h-5 min-w-[20px] px-1 bg-white text-[#2C5E1A]">
+                  {records?.filter(doc => doc.type === 'schedule').length || 0}
+                </span>
+              </button>
             </div>
 
             <div className="mb-8">
