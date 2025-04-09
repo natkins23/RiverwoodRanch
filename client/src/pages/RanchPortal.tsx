@@ -1,5 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { Calendar, FileText, Newspaper, ArrowRight, Users } from "lucide-react";
+import { Calendar, FileText, Newspaper, ArrowRight, Users, Edit, Plus, Trash } from "lucide-react";
 import { useAccessLevel } from "@/components/Navbar";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -51,7 +51,7 @@ export default function RanchPortal() {
     queryKey: ["/api/blog"],
     enabled: accessLevel !== "none",
   });
-  
+
   const { data: boardMembers, isLoading: boardLoading } = useQuery<BoardMember[]>({
     queryKey: ['/api/board-members'],
     enabled: accessLevel !== "none",
@@ -300,8 +300,9 @@ export default function RanchPortal() {
                     <Users className="h-6 w-6 text-[#2C5E1A] mr-3" />
                     <h2 className="text-xl font-semibold">Board Members</h2>
                   </div>
+                  <Button>Edit Board Members</Button>
                 </div>
-                
+
                 <p className="text-gray-600 mb-6">
                   Our dedicated board members oversee the management of Riverwood Ranch, ensuring the community's needs are met. 
                   Feel free to reach out to them for any inquiries or concerns at board@riverwoodranch.org
@@ -369,4 +370,4 @@ export default function RanchPortal() {
       <ScrollToTop />
     </div>
   );
-} 
+}
