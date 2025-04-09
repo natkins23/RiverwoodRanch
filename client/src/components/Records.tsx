@@ -650,12 +650,7 @@ export default function Records() {
 
             {/* Login Modal */}
             <Dialog open={isLoginModalOpen} onOpenChange={setIsLoginModalOpen}>
-              <DialogContent>
-                <DialogHeader>
-                  <DialogTitle>Access Protected Records</DialogTitle>
-                </DialogHeader>
-                <PasscodeLogin onSuccess={handleLoginSuccess} />
-              </DialogContent>
+              <PasscodeLogin onSuccess={handleLoginSuccess} />
             </Dialog>
           </div>
         </section>
