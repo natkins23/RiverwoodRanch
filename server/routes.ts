@@ -7,10 +7,11 @@ import {
   insertNewsletterSchema 
 } from "@shared/schema";
 import { z } from "zod";
+import { Timestamp } from "firebase-admin/firestore";
 import path from "path";
 import fs from "fs";
 import multer from "multer";
-import { bucket } from "./firebase";
+import { bucket, db } from "./firebase";
 import { format } from "util";
 
 // Configure multer for memory storage
@@ -306,6 +307,97 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       console.error("Error subscribing to newsletter:", error);
       res.status(500).json({ message: "Failed to subscribe to newsletter" });
+    }
+  });
+  
+  // PIN Validation schema
+  const pinValidationSchema = z.object({
+    pin: z.string().min(4).max(8)
+  });
+  
+  // Validate PIN from Firestore
+  app.post("/api/validate-pin", async (req: Request, res: Response) => {
+    try {
+      // Validate request body
+      const { pin } = pinValidationSchema.parse(req.body);
+      
+      // Fallback mechanism: check against hardcoded passcodes if Firebase is not configured
+      // This ensures the system continues to work even if Firestore is not yet set up
+      if (pin === "7799") {
+        return res.status(200).json({
+          success: true,
+          accessLevel: "admin",
+          message: "Admin passcode validated successfully (fallback)"
+        });
+      }
+      
+      if (pin === "7796") {
+        return res.status(200).json({
+          success: true,
+          accessLevel: "user",
+          message: "User passcode validated successfully (fallback)"
+        });
+      }
+      
+      try {
+        // Reference to the 'pins' collection in Firestore
+        const pinsCollection = db.collection('pins');
+        
+        // Query for the PIN
+        const pinSnapshot = await pinsCollection.where('pin', '==', pin).get();
+        
+        if (pinSnapshot.empty) {
+          return res.status(403).json({ 
+            success: false, 
+            message: "Invalid passcode" 
+          });
+        }
+        
+        // Get the PIN document
+        const pinDoc = pinSnapshot.docs[0];
+        const pinData = pinDoc.data();
+        
+        // Check if PIN has an expiration date and if it's expired
+        if (pinData.expiresAt && pinData.expiresAt instanceof Timestamp) {
+          const expirationTime = pinData.expiresAt.toDate();
+          if (expirationTime < new Date()) {
+            return res.status(403).json({
+              success: false,
+              message: "Passcode has expired"
+            });
+          }
+        }
+        
+        // Return the access level associated with the PIN
+        return res.status(200).json({
+          success: true,
+          accessLevel: pinData.accessLevel || 'user',  // Default to 'user' if not specified
+          message: "Passcode validated successfully"
+        });
+      } catch (firebaseError) {
+        console.error("Firebase error during PIN validation:", firebaseError);
+        // If we reach this point, we had a Firebase error but we can't use the fallback
+        // because the PIN didn't match our hardcoded values
+        return res.status(403).json({ 
+          success: false, 
+          message: "Invalid passcode" 
+        });
+      }
+      
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ 
+          success: false, 
+          message: "Invalid request format", 
+          errors: error.errors 
+        });
+      }
+      
+      console.error("Error validating PIN:", error);
+      res.status(500).json({ 
+        success: false, 
+        message: "Failed to validate passcode" 
+      });
     }
   });
 

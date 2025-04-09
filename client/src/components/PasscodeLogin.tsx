@@ -20,10 +20,6 @@ interface PasscodeLoginProps {
   onSuccess: (level: AccessLevel) => void;
 }
 
-// Passcodes stored in constants
-const USER_PASSCODE = "7796";
-const ADMIN_PASSCODE = "7799";
-
 export default function PasscodeLogin({ onSuccess }: PasscodeLoginProps) {
   const [passcode, setPasscode] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -31,42 +27,63 @@ export default function PasscodeLogin({ onSuccess }: PasscodeLoginProps) {
 
   const [, setLocation] = useLocation();
   
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
 
-    // Simulate API call delay
-    setTimeout(() => {
-      if (passcode === ADMIN_PASSCODE) {
-        onSuccess("admin");
-        const navigate = () => {
-          setLocation("/ranch-portal");
-          toast({
-            title: "Welcome, Board Member",
-            description: "You now have access to all documents and features.",
-          });
-        };
-        navigate();
-      } else if (passcode === USER_PASSCODE) {
-        onSuccess("user");
-        const navigate = () => {
-          setLocation("/ranch-portal");
-          toast({
-            title: "Welcome",
-            description: "You now have access to protected documents.",
-          });
-        };
-        navigate();
+    try {
+      const response = await fetch('/api/validate-pin', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ pin: passcode }),
+      });
+
+      const data = await response.json();
+      
+      if (!response.ok) {
+        toast({
+          title: "Error",
+          description: data.message || "Invalid passcode. Please try again.",
+          variant: "destructive",
+        });
+        setIsLoading(false);
+        setPasscode("");
+        return;
+      }
+      
+      if (data.success) {
+        const accessLevel = data.accessLevel as AccessLevel;
+        onSuccess(accessLevel);
+        
+        setLocation("/ranch-portal");
+        toast({
+          title: accessLevel === "admin" 
+            ? "Welcome, Board Member" 
+            : "Welcome",
+          description: accessLevel === "admin"
+            ? "You now have access to all documents and features."
+            : "You now have access to protected documents.",
+        });
       } else {
         toast({
           title: "Invalid Passcode",
-          description: "Please try again with the correct passcode.",
+          description: data.message || "Please try again with the correct passcode.",
           variant: "destructive",
         });
       }
+    } catch (error) {
+      console.error("Error validating passcode:", error);
+      toast({
+        title: "Error",
+        description: "An error occurred. Please try again later.",
+        variant: "destructive",
+      });
+    } finally {
       setIsLoading(false);
       setPasscode("");
-    }, 500);
+    }
   };
 
   return (

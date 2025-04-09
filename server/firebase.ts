@@ -1,5 +1,6 @@
 import { initializeApp, cert } from 'firebase-admin/app';
 import { getStorage } from 'firebase-admin/storage';
+import { getFirestore } from 'firebase-admin/firestore';
 import dotenv from 'dotenv';
 dotenv.config();
 
@@ -15,5 +16,6 @@ const firebaseConfig = {
 // Initialize Firebase Admin
 const app = initializeApp(firebaseConfig);
 const bucket = getStorage().bucket();
+const db = getFirestore();
 
-export { bucket };
+export { bucket, db };

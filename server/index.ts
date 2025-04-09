@@ -7,6 +7,7 @@ import blogRouter from './routes/blog';
 import boardRouter from './routes/board';
 // Remove the documents router import as we're using the one in routes.ts
 import { errorHandler } from './middleware/errorHandler';
+import { initPins } from './init-firebase';
 
 const app = express();
 app.use(express.json());
@@ -51,6 +52,13 @@ app.use('/api/board', boardRouter);
 // Remove the documents router since we're using the one in routes.ts
 
 (async () => {
+  // Initialize Firebase pins collection
+  try {
+    await initPins();
+  } catch (error) {
+    console.error('Error initializing Firebase pins, continuing anyway:', error);
+  }
+  
   const server = await registerRoutes(app);
 
   // Error handler
