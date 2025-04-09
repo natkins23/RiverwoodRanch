@@ -84,6 +84,21 @@ export default function Properties() {
                 </div>
               </div>
             </div>
+            <div className="bg-white rounded-lg shadow-md p-3 mt-2">
+              <h4 className="text-md font-semibold mb-2 text-[#2C5E1A]">
+                Owner Obligations
+              </h4>
+              <p className="text-xs italic ">
+                Note: All property owners are legally required to pay annual
+                dues to the Riverwood Ranch Corporation. These dues are used to
+                cover the costs of maintaining the shared road easement and
+                other community amenities. Failure to pay dues may result in
+                legal action. These due obligations are outlined in the official
+                Ranch Bylaws available in the Records section of this website.
+                Annual dues are based on projected expenses and are approved by
+                a vote of ranch members.
+              </p>
+            </div>
           </div>
 
           <div>
@@ -107,23 +122,6 @@ export default function Properties() {
                   </li>
                 ))}
               </ul>
-
-              </div>
-
-            <div className="bg-white rounded-lg shadow-md p-6 mb-8">
-              <h3 className="text-xl font-semibold mb-4 text-[#2C5E1A]">
-                Property Owner Obligations
-              </h3>
-              <p className="text-sm">
-                NOTE: All property owners are legally required to pay annual
-                dues to the Riverwood Ranch Corporation. These dues are used to
-                cover the costs of maintaining the shared road easement and
-                other community amenities. Failure to pay dues may result in
-                legal action. These due obligations are outlined in the official
-                Ranch Bylaws available in the Records section of this website.
-                Annual dues are based on projected expenses and are approved by
-                a vote of ranch members.
-              </p>
             </div>
 
             <div className="rounded-lg overflow-hidden shadow-md">
