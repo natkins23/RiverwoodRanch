@@ -7,10 +7,9 @@ export default function Hero() {
   return (
     <section 
       id="home" 
-      className="relative bg-center bg-cover h-[500px] flex items-center mt-0" 
+      className="relative bg-center bg-cover h-[500px] flex items-center" 
       style={{ 
-        backgroundImage: "url('https://images.unsplash.com/photo-1500382017468-9049fed747ef?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1932&q=80')",
-        marginTop: '64px' // This accounts for the navbar height
+        backgroundImage: "url('https://images.unsplash.com/photo-1500382017468-9049fed747ef?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1932&q=80')"
       }}
     >
       <div className="absolute inset-0 bg-black bg-opacity-40"></div>
