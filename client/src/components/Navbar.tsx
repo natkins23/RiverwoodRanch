@@ -1,5 +1,13 @@
 import { useState, useEffect, createContext, useContext } from "react";
-import { Menu, X, Sun, LogOut, ShieldCheck, User, ArrowLeft } from "lucide-react";
+import {
+  Menu,
+  X,
+  Sun,
+  LogOut,
+  ShieldCheck,
+  User,
+  ArrowLeft,
+} from "lucide-react";
 import { Link, useLocation } from "wouter";
 import { scrollToElement, scrollToElementWithNavbarOffset } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -12,7 +20,9 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import PasscodeLogin, { AccessLevel as LoginAccessLevel } from "@/components/PasscodeLogin";
+import PasscodeLogin, {
+  AccessLevel as LoginAccessLevel,
+} from "@/components/PasscodeLogin";
 
 // Define access level type
 export type NavbarAccessLevel = "none" | "user" | "admin";
@@ -37,9 +47,7 @@ const scrollLinks = [
 ];
 
 // Links for navigating to separate pages
-const pageLinks = [
-  { name: "Records", href: "/records" },
-];
+const pageLinks = [{ name: "Records", href: "/records" }];
 
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -92,10 +100,10 @@ export default function Navbar() {
         visible ? "translate-y-0" : "-translate-y-full"
       }`}
     >
-      <div className="container mx-auto px-4 py-4 flex flex-col md:flex-row justify-between items-center">
+      <div className="container mx-auto px-4 py-5 flex flex-col md:flex-row justify-between items-center">
         <div className="flex items-center mb-4 md:mb-0 justify-between w-full md:w-auto">
           <Link href="/">
-            <div 
+            <div
               className="flex items-center cursor-pointer"
               onClick={(e) => {
                 if (isHomePage) {
@@ -105,7 +113,9 @@ export default function Navbar() {
               }}
             >
               <Sun className="mr-3 text-[#D4AF37]" size={30} />
-              <h1 className="font-bold text-2xl md:text-3xl">Riverwood Ranch</h1>
+              <h1 className="font-bold text-2xl md:text-3xl">
+                Riverwood Ranch
+              </h1>
             </div>
           </Link>
           <button
@@ -122,7 +132,10 @@ export default function Navbar() {
             className={`w-full md:w-auto ${isMenuOpen ? "block" : "hidden md:block"}`}
           >
             <ul className="flex flex-col md:flex-row gap-1 md:gap-6 text-sm md:text-base items-center">
-              {(isHomePage || accessLevel !== "none" || location === "/records" || isRanchPortal) &&
+              {(isHomePage ||
+                accessLevel !== "none" ||
+                location === "/records" ||
+                isRanchPortal) &&
                 scrollLinks.map((link) => (
                   <li key={link.name}>
                     <a
@@ -135,10 +148,14 @@ export default function Navbar() {
                           setLocation("/");
                           // Wait for navigation to complete before scrolling
                           setTimeout(() => {
-                            scrollToElementWithNavbarOffset(link.href.substring(1));
+                            scrollToElementWithNavbarOffset(
+                              link.href.substring(1),
+                            );
                           }, 100);
                         } else {
-                          scrollToElementWithNavbarOffset(link.href.substring(1));
+                          scrollToElementWithNavbarOffset(
+                            link.href.substring(1),
+                          );
                         }
                       }}
                     >

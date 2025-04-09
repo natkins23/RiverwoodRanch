@@ -19,8 +19,7 @@ interface PasscodeLoginProps {
   onSuccess: (level: AccessLevel) => void;
 }
 
-// User passcode: 7796
-// Admin passcode: 7799
+// Passcodes stored in constants
 const USER_PASSCODE = "7796";
 const ADMIN_PASSCODE = "7799";
 
@@ -64,7 +63,7 @@ export default function PasscodeLogin({ onSuccess }: PasscodeLoginProps) {
       <DialogHeader>
         <DialogTitle>Enter Passcode</DialogTitle>
         <DialogDescription>
-          Please enter your passcode to access protected content.
+          Please enter your property owner or board member passcode to access protected content.
         </DialogDescription>
       </DialogHeader>
       <form onSubmit={handleSubmit} className="space-y-4">
@@ -78,16 +77,7 @@ export default function PasscodeLogin({ onSuccess }: PasscodeLoginProps) {
             autoFocus
           />
         </div>
-        <div className="flex justify-between text-sm text-gray-500">
-          <div className="flex items-center">
-            <User className="h-4 w-4 mr-1" />
-            <span>User: {USER_PASSCODE}</span>
-          </div>
-          <div className="flex items-center">
-            <ShieldCheck className="h-4 w-4 mr-1" />
-            <span>Admin: {ADMIN_PASSCODE}</span>
-          </div>
-        </div>
+        {/* Access level information removed as requested */}
         <Button
           type="submit"
           className="w-full bg-[#2C5E1A] hover:bg-[#4C8033]"
