@@ -1,7 +1,7 @@
 import { useState, useEffect, createContext, useContext } from "react";
 import { Menu, X, Sun, LogOut, ShieldCheck, User, ArrowLeft } from "lucide-react";
 import { Link, useLocation } from "wouter";
-import { scrollToElement, scrollToElementWithOffset } from "@/lib/utils";
+import { scrollToElement, scrollToElementWithNavbarOffset } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -100,7 +100,7 @@ export default function Navbar() {
               onClick={(e) => {
                 if (isHomePage) {
                   e.preventDefault();
-                  scrollToElementWithOffset("home");
+                  scrollToElementWithNavbarOffset("home");
                 }
               }}
             >
@@ -135,10 +135,10 @@ export default function Navbar() {
                           setLocation("/");
                           // Wait for navigation to complete before scrolling
                           setTimeout(() => {
-                            scrollToElementWithOffset(link.href.substring(1));
+                            scrollToElementWithNavbarOffset(link.href.substring(1));
                           }, 100);
                         } else {
-                          scrollToElementWithOffset(link.href.substring(1));
+                          scrollToElementWithNavbarOffset(link.href.substring(1));
                         }
                       }}
                     >
