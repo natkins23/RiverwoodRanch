@@ -6,15 +6,15 @@ import { useToast } from "@/hooks/use-toast";
 
 export function useDocuments() {
   const {
-    data: documents,
+    data: records,
     isLoading,
     error,
   } = useQuery<Document[]>({
-    queryKey: ['/api/documents'],
+    queryKey: ['/api/records'],
   });
 
   return {
-    documents,
+    records,
     isLoading,
     error,
   };
@@ -23,11 +23,11 @@ export function useDocuments() {
 export function useDocumentUpload() {
   const uploadMutation = useMutation({
     mutationFn: async (formData: FormData) => {
-      const response = await apiRequest("POST", "/api/documents", formData);
+      const response = await apiRequest("POST", "/api/records", formData);
       return response.json();
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['/api/documents'] });
+      queryClient.invalidateQueries({ queryKey: ['/api/records'] });
     },
   });
 
@@ -37,11 +37,11 @@ export function useDocumentUpload() {
 export function useDocumentArchive() {
   const archiveMutation = useMutation({
     mutationFn: async ({ id, archived }: { id: number; archived: boolean }) => {
-      const response = await apiRequest("PATCH", `/api/documents/${id}/archive`, { archived });
+      const response = await apiRequest("PATCH", `/api/records/${id}/archive`, { archived });
       return response.json();
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['/api/documents'] });
+      queryClient.invalidateQueries({ queryKey: ['/api/records'] });
     },
   });
 
@@ -54,30 +54,30 @@ export function useDocumentDelete() {
   
   const deleteMutation = useMutation({
     mutationFn: async (id: number) => {
-      const response = await apiRequest("DELETE", `/api/documents/${id}`);
+      const response = await apiRequest("DELETE", `/api/records/${id}`);
       return { id, ...(await response.json()) };
     },
     onSuccess: (data) => {
-      // Optimistically update the UI by removing the deleted document immediately
-      queryClient.setQueryData(['/api/documents'], (oldData: Document[] | undefined) => {
+      // Optimistically update the UI by removing the deleted record immediately
+      queryClient.setQueryData(['/api/records'], (oldData: Document[] | undefined) => {
         if (!oldData) return [];
         return oldData.filter(doc => doc.id !== data.id);
       });
       
       // Also invalidate to ensure we get fresh data from the server
-      queryClient.invalidateQueries({ queryKey: ['/api/documents'] });
+      queryClient.invalidateQueries({ queryKey: ['/api/records'] });
       
       // Show success toast
       toast({
-        title: "Document deleted",
-        description: "The document has been permanently deleted.",
+        title: "Record deleted",
+        description: "The record has been permanently deleted.",
       });
     },
     onError: (error) => {
       console.error("Delete error:", error);
       toast({
-        title: "Error deleting document",
-        description: "There was a problem deleting the document. Please try again.",
+        title: "Error deleting record",
+        description: "There was a problem deleting the record. Please try again.",
         variant: "destructive",
       });
     },

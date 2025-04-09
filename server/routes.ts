@@ -19,72 +19,99 @@ const upload = multer({
   limits: {
     fileSize: 25 * 1024 * 1024, // 25MB limit
   },
+  fileFilter: (req, file, callback) => {
+    // Allow documents and image formats
+    const allowedTypes = [
+      // Document formats
+      'application/pdf', 
+      'application/msword',
+      'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+      'application/vnd.ms-excel',
+      'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+      'application/vnd.ms-powerpoint',
+      'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+      'text/plain',
+      // Image formats
+      'image/jpeg',
+      'image/png',
+      'image/gif',
+      'image/bmp',
+      'image/webp',
+      'image/tiff'
+    ];
+    
+    if (allowedTypes.includes(file.mimetype)) {
+      callback(null, true);
+    } else {
+      callback(new Error('File type not allowed. Allowed types: documents and images.'));
+    }
+  }
 });
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // put application routes here
   // prefix all routes with /api
 
-  // Get all documents
-  app.get("/api/documents", async (req: Request, res: Response) => {
+  // Get all records
+  app.get("/api/records", async (req: Request, res: Response) => {
     try {
-      // Attempt to sync with Firebase first to ensure we have the latest documents
+      // Attempt to sync with Firebase first to ensure we have the latest records
       try {
         await storage.syncWithFirebase();
       } catch (syncError) {
-        console.error("Error syncing with Firebase, proceeding with local documents:", syncError);
-        // Continue with local documents if Firebase sync fails
+        console.error("Error syncing with Firebase, proceeding with local records:", syncError);
+        // Continue with local records if Firebase sync fails
       }
       
-      // Always get documents from storage even if Firebase sync fails
-      // The storage.getAllDocuments method will ensure we have sample documents
+      // Always get records from storage even if Firebase sync fails
+      // The storage.getAllDocuments method will ensure we have sample records
       // even if none exist in the storage
-      const documents = await storage.getAllDocuments();
+      const records = await storage.getAllDocuments();
       
       // Always return something to the client
-      if (!documents || documents.length === 0) {
-        console.log("No documents found. Creating fallback documents.");
+      if (!records || records.length === 0) {
+        console.log("No records found. Creating fallback records.");
         await storage.createSampleDocuments();
-        const fallbackDocs = await storage.getAllDocuments();
-        return res.json(fallbackDocs);
+        const fallbackRecords = await storage.getAllDocuments();
+        return res.json(fallbackRecords);
       }
       
-      res.json(documents);
+      res.json(records);
     } catch (error) {
-      console.error("Error fetching documents:", error);
+      console.error("Error fetching records:", error);
       
-      // Create sample documents as a last resort and return them
+      // Create sample records as a last resort and return them
       try {
-        console.log("Creating fallback documents due to error.");
+        console.log("Creating fallback records due to error.");
         await storage.createSampleDocuments();
-        const fallbackDocs = await storage.getAllDocuments();
-        return res.json(fallbackDocs);
+        const fallbackRecords = await storage.getAllDocuments();
+        return res.json(fallbackRecords);
       } catch (fallbackError) {
         console.error("Even fallback creation failed:", fallbackError);
-        return res.status(500).json({ error: "Failed to fetch documents" });
+        return res.status(500).json({ error: "Failed to fetch records" });
       }
     }
   });
 
-  // Get document by ID
-  app.get("/api/documents/:id", async (req: Request, res: Response) => {
+  // Get record by ID
+  app.get("/api/records/:id", async (req: Request, res: Response) => {
     try {
       const id = parseInt(req.params.id);
       const document = await storage.getDocumentById(id);
 
       if (!document) {
-        return res.status(404).json({ message: "Document not found" });
+        return res.status(404).json({ message: "Record not found" });
       }
 
       res.json(document);
     } catch (error) {
-      console.error("Error fetching document:", error);
-      res.status(500).json({ message: "Failed to fetch document" });
+      console.error("Error fetching record:", error);
+      res.status(500).json({ message: "Failed to fetch record" });
     }
   });
 
-  // Upload a document
-  app.post("/api/documents", upload.single("file"), async (req: Request, res: Response) => {
+  // Upload a record
+  app.post("/api/records", upload.single("file"), async (req: Request, res: Response) => {
     try {
       console.log("Request body:", req.body);
       console.log("Request file:", req.file ? "File received" : "No file");
@@ -140,8 +167,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Wait for the file to be uploaded and get the public URL
       const fileUrl = await uploadPromise;
 
-      // Validate the document data
-      const documentData = {
+      // Validate the record data
+      const recordData = {
         title,
         type,
         description,
@@ -150,24 +177,24 @@ export async function registerRoutes(app: Express): Promise<Server> {
         visibility: visibility || "public" // Set visibility with default as public
       };
 
-      const validatedData = insertDocumentSchema.parse(documentData);
+      const validatedData = insertDocumentSchema.parse(recordData);
 
-      // Create the document
+      // Create the record
       const newDocument = await storage.createDocument(validatedData);
 
       res.status(201).json(newDocument);
     } catch (error) {
       if (error instanceof z.ZodError) {
-        return res.status(400).json({ message: "Invalid document data", errors: error.errors });
+        return res.status(400).json({ message: "Invalid record data", errors: error.errors });
       }
 
-      console.error("Error uploading document:", error);
-      res.status(500).json({ message: "Failed to upload document" });
+      console.error("Error uploading record:", error);
+      res.status(500).json({ message: "Failed to upload record" });
     }
   });
   
-  // Archive/Unarchive a document
-  app.patch("/api/documents/:id/archive", async (req: Request, res: Response) => {
+  // Archive/Unarchive a record
+  app.patch("/api/records/:id/archive", async (req: Request, res: Response) => {
     try {
       const id = parseInt(req.params.id);
       const { archived } = req.body;
@@ -179,25 +206,25 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const document = await storage.updateDocumentArchiveStatus(id, archived);
       
       if (!document) {
-        return res.status(404).json({ message: "Document not found" });
+        return res.status(404).json({ message: "Record not found" });
       }
       
       res.json(document);
     } catch (error) {
-      console.error("Error updating document archive status:", error);
-      res.status(500).json({ message: "Failed to update document archive status" });
+      console.error("Error updating record archive status:", error);
+      res.status(500).json({ message: "Failed to update record archive status" });
     }
   });
   
-  // Delete a document
-  app.delete("/api/documents/:id", async (req: Request, res: Response) => {
+  // Delete a record
+  app.delete("/api/records/:id", async (req: Request, res: Response) => {
     try {
       const id = parseInt(req.params.id);
       
-      // Get the document before deleting it
+      // Get the record before deleting it
       const document = await storage.getDocumentById(id);
       if (!document) {
-        return res.status(404).json({ message: "Document not found" });
+        return res.status(404).json({ message: "Record not found" });
       }
       
       // Save the URL to prevent re-syncing this file
@@ -207,18 +234,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const success = await storage.deleteDocument(id);
       
       if (!success) {
-        return res.status(404).json({ message: "Document deletion failed" });
+        return res.status(404).json({ message: "Record deletion failed" });
       }
       
-      // Return the document ID and URL to help the client update its cache
+      // Return the record ID and URL to help the client update its cache
       res.json({ 
-        message: "Document deleted successfully", 
+        message: "Record deleted successfully", 
         id, 
         fileContent 
       });
     } catch (error) {
-      console.error("Error deleting document:", error);
-      res.status(500).json({ message: "Failed to delete document" });
+      console.error("Error deleting record:", error);
+      res.status(500).json({ message: "Failed to delete record" });
     }
   });
 
