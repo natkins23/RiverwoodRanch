@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useLocation } from "wouter";
 import { ShieldCheck, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -28,6 +29,8 @@ export default function PasscodeLogin({ onSuccess }: PasscodeLoginProps) {
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
 
+  const [, setLocation] = useLocation();
+  
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
@@ -40,12 +43,14 @@ export default function PasscodeLogin({ onSuccess }: PasscodeLoginProps) {
           title: "Welcome, Board Member",
           description: "You now have access to all documents and features.",
         });
+        setLocation("/ranch-portal");
       } else if (passcode === USER_PASSCODE) {
         onSuccess("user");
         toast({
           title: "Welcome",
           description: "You now have access to protected documents.",
         });
+        setLocation("/ranch-portal");
       } else {
         toast({
           title: "Invalid Passcode",
