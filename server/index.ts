@@ -5,7 +5,7 @@ import cors from 'cors';
 import eventsRouter from './routes/events';
 import blogRouter from './routes/blog';
 import boardRouter from './routes/board';
-import documentsRouter from './routes/documents';
+// Remove the documents router import as we're using the one in routes.ts
 import { errorHandler } from './middleware/errorHandler';
 
 const app = express();
@@ -48,7 +48,7 @@ app.use((req, res, next) => {
 app.use('/api/events', eventsRouter);
 app.use('/api/blog', blogRouter);
 app.use('/api/board', boardRouter);
-app.use('/api/documents', documentsRouter);
+// Remove the documents router since we're using the one in routes.ts
 
 (async () => {
   const server = await registerRoutes(app);

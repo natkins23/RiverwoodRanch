@@ -107,5 +107,16 @@
     "uploadDate": "2025-04-08T17:47:38.001Z",
     "visibility": "public",
     "archived": false
+  },
+  {
+    "title": "testttestttestt",
+    "type": "bylaw",
+    "description": "testttestttestttestt",
+    "fileName": "Policy Concerning Payment of the Legally Required Assessment Fees.docx",
+    "fileContent": "https://storage.googleapis.com/riverwood-c3409.firebasestorage.app/documents/1744217408195-Policy_Concerning_Payment_of_the_Legally_Required_Assessment_Fees.docx",
+    "visibility": "admin",
+    "id": 20,
+    "uploadDate": "2025-04-09T16:50:08.879Z",
+    "archived": false
   }
 ]

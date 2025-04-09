@@ -1,17 +1,13 @@
 import express from 'express';
-import { getFirestore } from 'firebase-admin/firestore';
+import { storage } from '../storage';
 
 const router = express.Router();
-const db = getFirestore();
 
 // Get all documents
 router.get('/', async (req, res) => {
   try {
-    const snapshot = await db.collection('documents').get();
-    const documents = snapshot.docs.map(doc => ({
-      id: doc.id,
-      ...doc.data()
-    }));
+    // Use our storage class which has fallback documents
+    const documents = await storage.getAllDocuments();
     res.json(documents);
   } catch (error) {
     console.error('Error fetching documents:', error);
@@ -19,4 +15,4 @@ router.get('/', async (req, res) => {
   }
 });
 
-export default router; 
+export default router;

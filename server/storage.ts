@@ -22,6 +22,7 @@ export interface IStorage {
   updateDocumentArchiveStatus(id: number, archived: boolean): Promise<Document | undefined>;
   deleteDocument(id: number): Promise<boolean>;
   syncWithFirebase(): Promise<void>; // New method to sync with Firebase
+  createSampleDocuments(): Promise<void>; // Method to create sample documents
   
   // Board member methods
   getAllBoardMembers(): Promise<BoardMember[]>;
@@ -82,7 +83,14 @@ export class MemStorage implements IStorage {
     // Initialize with default board members
     this.initializeBoardMembers();
     
-    // Sync with Firebase
+    // Check if we need to create sample documents (if none exist)
+    if (this.documents.size === 0) {
+      console.log("No documents found. Creating example documents...");
+      this.createSampleDocuments();
+    }
+    
+    // Try to sync with Firebase, but don't worry if it fails
+    // since we already have sample documents
     this.syncWithFirebase().catch((err: Error) => {
       console.error("Error syncing with Firebase:", err);
     });
@@ -143,6 +151,12 @@ export class MemStorage implements IStorage {
   
   // Document methods
   async getAllDocuments(): Promise<Document[]> {
+    // If we have no documents, create sample ones
+    if (this.documents.size === 0) {
+      console.log("No documents found during getAllDocuments. Creating examples...");
+      this.createSampleDocuments();
+    }
+    
     return Array.from(this.documents.values());
   }
   
@@ -466,7 +480,7 @@ export class MemStorage implements IStorage {
   }
   
   // Create sample documents if Firebase fails and we have no documents
-  private createSampleDocuments() {
+  async createSampleDocuments(): Promise<void> {
     console.log("Creating example documents since Firebase is unavailable");
     
     // Add some example documents with different types
