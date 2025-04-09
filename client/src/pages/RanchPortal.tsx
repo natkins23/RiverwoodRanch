@@ -1,5 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { Calendar, FileText, Newspaper, ArrowRight, Users, Edit, Plus, Trash } from "lucide-react";
+import { Calendar, FileText, Newspaper, ArrowRight, Users, Edit, Plus, Trash, Mail, Phone } from "lucide-react";
+import { DialogClose } from "@/components/ui/dialog";
 import { useAccessLevel } from "@/components/Navbar";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -300,7 +301,119 @@ export default function RanchPortal() {
                     <Users className="h-6 w-6 text-[#2C5E1A] mr-3" />
                     <h2 className="text-xl font-semibold">Board Members</h2>
                   </div>
-                  <Button>Edit Board Members</Button>
+                  {accessLevel === 'admin' && (
+                    <Dialog>
+                      <DialogTrigger asChild>
+                        <Button className="flex items-center gap-2">
+                          <Edit className="h-4 w-4" />
+                          Edit Members
+                        </Button>
+                      </DialogTrigger>
+                      <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
+                        <DialogHeader>
+                          <DialogTitle>Edit Board Members</DialogTitle>
+                        </DialogHeader>
+                        <div className="space-y-4">
+                          {boardMembers?.map((member) => (
+                            <div key={member.id} className="p-4 border rounded-lg space-y-2">
+                              <div className="flex justify-between">
+                                <h3 className="font-semibold">Board Member</h3>
+                                <Button
+                                  variant="ghost"
+                                  size="icon"
+                                  className="text-red-500 hover:text-red-700"
+                                  onClick={() => {
+                                    const updatedMembers = boardMembers.filter(m => m.id !== member.id);
+                                    queryClient.setQueryData(['/api/board-members'], updatedMembers);
+                                  }}
+                                >
+                                  <Trash className="h-4 w-4" />
+                                </Button>
+                              </div>
+                              <Input
+                                placeholder="Name"
+                                value={member.name}
+                                onChange={(e) => {
+                                  const updatedMembers = boardMembers.map(m =>
+                                    m.id === member.id ? { ...m, name: e.target.value } : m
+                                  );
+                                  queryClient.setQueryData(['/api/board-members'], updatedMembers);
+                                }}
+                              />
+                              <Input
+                                placeholder="Position"
+                                value={member.position}
+                                onChange={(e) => {
+                                  const updatedMembers = boardMembers.map(m =>
+                                    m.id === member.id ? { ...m, position: e.target.value } : m
+                                  );
+                                  queryClient.setQueryData(['/api/board-members'], updatedMembers);
+                                }}
+                              />
+                              <Input
+                                placeholder="Email"
+                                value={member.email}
+                                onChange={(e) => {
+                                  const updatedMembers = boardMembers.map(m =>
+                                    m.id === member.id ? { ...m, email: e.target.value } : m
+                                  );
+                                  queryClient.setQueryData(['/api/board-members'], updatedMembers);
+                                }}
+                              />
+                              <Input
+                                placeholder="Phone"
+                                value={member.phone}
+                                onChange={(e) => {
+                                  const updatedMembers = boardMembers.map(m =>
+                                    m.id === member.id ? { ...m, phone: e.target.value } : m
+                                  );
+                                  queryClient.setQueryData(['/api/board-members'], updatedMembers);
+                                }}
+                              />
+                            </div>
+                          ))}
+                          <Button
+                            variant="outline"
+                            className="w-full flex items-center gap-2"
+                            onClick={() => {
+                              const newMember = {
+                                id: Date.now(),
+                                name: "",
+                                position: "",
+                                email: "",
+                                phone: ""
+                              };
+                              queryClient.setQueryData(['/api/board-members'], 
+                                (old: BoardMember[] | undefined) => [...(old || []), newMember]
+                              );
+                            }}
+                          >
+                            <Plus className="h-4 w-4" />
+                            Add Board Member
+                          </Button>
+                          <div className="flex justify-end gap-2 mt-4">
+                            <DialogClose asChild>
+                              <Button variant="outline">Cancel</Button>
+                            </DialogClose>
+                            <Button onClick={async () => {
+                              try {
+                                await fetch('/api/board-members', {
+                                  method: 'PUT',
+                                  headers: { 'Content-Type': 'application/json' },
+                                  body: JSON.stringify(boardMembers)
+                                });
+                                queryClient.invalidateQueries({ queryKey: ['/api/board-members'] });
+                              } catch (error) {
+                                console.error('Failed to save board members:', error);
+                              }
+                            }}>
+                              Save Changes
+                            </Button>
+                          </div>
+                        </div>
+                      </DialogContent>
+                    </Dialog>
+                  )}
                 </div>
 
                 <p className="text-gray-600 mb-6">
