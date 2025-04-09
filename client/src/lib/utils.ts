@@ -18,8 +18,8 @@ export const scrollToElement = (elementId: string) => {
 export const scrollToElementWithOffset = (elementId: string) => {
   const element = document.getElementById(elementId);
   if (element) {
-    // Get the navbar height (approximately 80px) plus a small additional padding (20px)
-    const offset = 80;
+    // Use a 70px offset for a better scrolling experience
+    const offset = 70;
     
     // Calculate the element's position relative to the top of the document
     const elementPosition = element.getBoundingClientRect().top + window.pageYOffset;
