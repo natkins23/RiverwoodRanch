@@ -28,6 +28,7 @@ export interface IStorage {
   getAllBoardMembers(): Promise<BoardMember[]>;
   getBoardMemberById(id: number): Promise<BoardMember | undefined>;
   createBoardMember(boardMember: InsertBoardMember): Promise<BoardMember>;
+  updateBoardMembers(boardMembers: BoardMember[]): Promise<void>;
   
   // Contact form methods
   createContactSubmission(contact: InsertContact): Promise<ContactSubmission>;

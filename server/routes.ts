@@ -260,6 +260,19 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Update board members
+  app.put("/api/board-members", async (req: Request, res: Response) => {
+    try {
+      // Verify admin access level here
+      const boardMembers = req.body;
+      await storage.updateBoardMembers(boardMembers);
+      res.json({ message: "Board members updated successfully" });
+    } catch (error) {
+      console.error("Error updating board members:", error);
+      res.status(500).json({ message: "Failed to update board members" });
+    }
+  });
+
   // Submit contact form
   app.post("/api/contact", async (req: Request, res: Response) => {
     try {
