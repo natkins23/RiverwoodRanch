@@ -1,13 +1,27 @@
-import { Link } from "wouter";
+import { Link, useLocation } from "wouter";
 import { 
   Sun, 
   MapPin, 
-  Phone, 
-  Mail, 
-  Clock 
+  Mail
 } from "lucide-react";
+import { scrollToElement } from "@/lib/utils";
 
 export default function Footer() {
+  const [location, setLocation] = useLocation();
+  const isHomePage = location === "/";
+  
+  const handleNavigation = (e: React.MouseEvent<HTMLAnchorElement>, sectionId: string) => {
+    e.preventDefault();
+    if (isHomePage) {
+      scrollToElement(sectionId);
+    } else {
+      setLocation("/");
+      // Wait for navigation to complete before scrolling
+      setTimeout(() => {
+        scrollToElement(sectionId);
+      }, 100);
+    }
+  };
   return (
     <footer className="bg-[#3E2723] text-white py-12">
       <div className="container mx-auto px-6">
@@ -26,32 +40,46 @@ export default function Footer() {
             <h3 className="text-lg font-semibold mb-4">Quick Links</h3>
             <ul className="space-y-2">
               <li>
-                <a href="#home" className="text-gray-300 hover:text-white transition-colors duration-300">
+                <a 
+                  href="#home" 
+                  className="text-gray-300 hover:text-white transition-colors duration-300 cursor-pointer"
+                  onClick={(e) => handleNavigation(e, "home")}
+                >
                   Home
                 </a>
               </li>
               <li>
-                <a href="#about" className="text-gray-300 hover:text-white transition-colors duration-300">
+                <a 
+                  href="#about" 
+                  className="text-gray-300 hover:text-white transition-colors duration-300 cursor-pointer"
+                  onClick={(e) => handleNavigation(e, "about")}
+                >
                   About Us
                 </a>
               </li>
               <li>
-                <a href="#documents" className="text-gray-300 hover:text-white transition-colors duration-300">
-                  Documents
-                </a>
+                <Link 
+                  href="/records" 
+                  className="text-gray-300 hover:text-white transition-colors duration-300 cursor-pointer"
+                >
+                  Records
+                </Link>
               </li>
               <li>
-                <a href="#board" className="text-gray-300 hover:text-white transition-colors duration-300">
-                  Board Members
-                </a>
-              </li>
-              <li>
-                <a href="#properties" className="text-gray-300 hover:text-white transition-colors duration-300">
+                <a 
+                  href="#properties" 
+                  className="text-gray-300 hover:text-white transition-colors duration-300 cursor-pointer"
+                  onClick={(e) => handleNavigation(e, "properties")}
+                >
                   Properties
                 </a>
               </li>
               <li>
-                <a href="#contact" className="text-gray-300 hover:text-white transition-colors duration-300">
+                <a 
+                  href="#contact" 
+                  className="text-gray-300 hover:text-white transition-colors duration-300 cursor-pointer"
+                  onClick={(e) => handleNavigation(e, "contact")}
+                >
                   Contact
                 </a>
               </li>
@@ -59,31 +87,25 @@ export default function Footer() {
           </div>
 
           <div>
-            <h3 className="text-lg font-semibold mb-4">Important Documents</h3>
+            <h3 className="text-lg font-semibold mb-4">Ranch Portal</h3>
             <ul className="space-y-2">
               <li>
-                <a href="#documents" className="text-gray-300 hover:text-white transition-colors duration-300">
-                  Road Maintenance Agreement
-                </a>
+                <Link href="/records" className="text-gray-300 hover:text-white transition-colors duration-300 cursor-pointer">
+                  Ranch Records
+                </Link>
               </li>
               <li>
-                <a href="#documents" className="text-gray-300 hover:text-white transition-colors duration-300">
-                  Corporation Bylaws
-                </a>
+                <Link href="/ranch-portal" className="text-gray-300 hover:text-white transition-colors duration-300 cursor-pointer">
+                  Member Dashboard
+                </Link>
               </li>
               <li>
-                <a href="#documents" className="text-gray-300 hover:text-white transition-colors duration-300">
-                  Annual Budget
-                </a>
-              </li>
-              <li>
-                <a href="#documents" className="text-gray-300 hover:text-white transition-colors duration-300">
-                  Meeting Minutes
-                </a>
-              </li>
-              <li>
-                <a href="#documents" className="text-gray-300 hover:text-white transition-colors duration-300">
-                  Property Maps
+                <a 
+                  href="#contact" 
+                  className="text-gray-300 hover:text-white transition-colors duration-300 cursor-pointer"
+                  onClick={(e) => handleNavigation(e, "contact")}
+                >
+                  Contact Board
                 </a>
               </li>
             </ul>
