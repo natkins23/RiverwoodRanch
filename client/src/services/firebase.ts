@@ -1,22 +1,6 @@
-import { initializeApp } from "firebase/app";
-import { getFirestore, collection, addDoc, getDocs, serverTimestamp } from "firebase/firestore";
-import { getAuth, setPersistence, browserLocalPersistence, signInWithEmailAndPassword, signOut } from "firebase/auth";
-
-const firebaseConfig = {
-  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
-  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
-  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
-  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
-  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
-  appId: import.meta.env.VITE_FIREBASE_APP_ID,
-};
-
-const app = initializeApp(firebaseConfig);
-export const db = getFirestore(app);
-export const auth = getAuth(app);
-
-// Set persistence to LOCAL (7 days)
-setPersistence(auth, browserLocalPersistence);
+// Event types and API interfaces
+// This file provides type definitions and API client functions
+// We're not directly using Firebase client-side to avoid exposing API keys
 
 // Event types
 export interface Event {
@@ -28,9 +12,6 @@ export interface Event {
   description: string;
   createdAt: number;
 }
-
-// Events collection
-export const eventsCollection = collection(db, "events");
 
 // Create a new event
 export const createEvent = async (eventData: Omit<Event, "id" | "createdAt">) => {
@@ -56,12 +37,13 @@ export const getEvents = async () => {
   return response.json() as Promise<Event[]>;
 };
 
-// Auth functions
+// Placeholder API functions for auth - these aren't actually used in our app currently
+// as we use the passcode system instead
 export const signIn = async (email: string, password: string) => {
-  const userCredential = await signInWithEmailAndPassword(auth, email, password);
-  return userCredential.user;
+  console.warn('Firebase auth is not implemented on the client - using PIN system instead');
+  throw new Error('Firebase auth not implemented');
 };
 
 export const signOutUser = async () => {
-  await signOut(auth);
+  console.warn('Firebase auth is not implemented on the client - using PIN system instead');
 }; 
