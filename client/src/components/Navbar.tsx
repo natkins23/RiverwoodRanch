@@ -92,6 +92,8 @@ export default function Navbar() {
   const handleLoginSuccess = (level: LoginAccessLevel) => {
     setAccessLevel(level);
     setIsLoginModalOpen(false);
+    // Redirect to Ranch Portal after successful login
+    setLocation("/ranch-portal");
   };
 
   return (
