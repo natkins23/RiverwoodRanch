@@ -281,6 +281,15 @@ export class MemStorage implements IStorage {
     this.boardMembers.set(id, boardMember);
     return boardMember;
   }
+
+  async updateBoardMembers(boardMembers: BoardMember[]): Promise<void> {
+    // Clear existing board members
+    this.boardMembers.clear();
+    // Add the new board members
+    boardMembers.forEach(member => {
+      this.boardMembers.set(member.id, member);
+    });
+  }
   
   // Contact form methods
   async createContactSubmission(insertContact: InsertContact): Promise<ContactSubmission> {

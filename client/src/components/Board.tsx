@@ -46,14 +46,19 @@ export default function Board() {
 
   const handleSave = async () => {
     try {
-      await fetch('/api/board-members', {
+      const response = await fetch('/api/board-members', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(editingMembers)
       });
+      
+      if (!response.ok) {
+        throw new Error('Failed to update board members');
+      }
+      
+      // Update the local cache with new data
+      queryClient.setQueryData(['/api/board-members'], editingMembers);
       setIsEditModalOpen(false);
-      // Refetch board members
-      window.location.reload();
     } catch (error) {
       console.error('Failed to save board members:', error);
     }
