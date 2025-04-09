@@ -25,7 +25,7 @@ export default function Footer() {
   return (
     <footer className="bg-[#3E2723] text-white py-12">
       <div className="container mx-auto px-6">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           <div>
             <div className="flex items-center mb-4">
               <Sun className="text-[#D4AF37] mr-3" size={24} />
@@ -81,31 +81,6 @@ export default function Footer() {
                   onClick={(e) => handleNavigation(e, "contact")}
                 >
                   Contact
-                </a>
-              </li>
-            </ul>
-          </div>
-
-          <div>
-            <h3 className="text-lg font-semibold mb-4">Ranch Portal</h3>
-            <ul className="space-y-2">
-              <li>
-                <Link href="/records" className="text-gray-300 hover:text-white transition-colors duration-300 cursor-pointer">
-                  Ranch Records
-                </Link>
-              </li>
-              <li>
-                <Link href="/ranch-portal" className="text-gray-300 hover:text-white transition-colors duration-300 cursor-pointer">
-                  Member Dashboard
-                </Link>
-              </li>
-              <li>
-                <a 
-                  href="#contact" 
-                  className="text-gray-300 hover:text-white transition-colors duration-300 cursor-pointer"
-                  onClick={(e) => handleNavigation(e, "contact")}
-                >
-                  Contact Board
                 </a>
               </li>
             </ul>
