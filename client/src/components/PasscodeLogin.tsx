@@ -61,16 +61,18 @@ export default function PasscodeLogin({ onSuccess }: PasscodeLoginProps) {
   return (
     <DialogContent className="sm:max-w-[425px]">
       <DialogHeader>
-        <DialogTitle>Enter Passcode</DialogTitle>
+        <DialogTitle className="flex text-xl  items-center">
+          Enter Password
+        </DialogTitle>
         <DialogDescription>
-          Please enter your property owner or board member passcode to access protected content.
+          Please enter your property owner or board member passcode to access
+          protected content.
         </DialogDescription>
       </DialogHeader>
       <form onSubmit={handleSubmit} className="space-y-4">
         <div className="space-y-2">
           <Input
             type="password"
-            placeholder="Enter password"
             value={passcode}
             onChange={(e) => setPasscode(e.target.value)}
             className="text-center text-lg tracking-widest"
