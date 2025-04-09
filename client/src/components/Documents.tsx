@@ -61,6 +61,7 @@ export default function Documents() {
   const [searchTerm, setSearchTerm] = useState("");
   const [documentToDelete, setDocumentToDelete] = useState<Document | null>(null);
   const [previewDocument, setPreviewDocument] = useState<Document | null>(null);
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const { toast } = useToast();
 
   // Mutations for archive and delete
@@ -73,7 +74,7 @@ export default function Documents() {
     error,
   } = useQuery<Document[]>({
     queryKey: ["/api/documents"],
-    enabled: accessLevel !== "none",
+    enabled: true, // Always fetch documents
   });
 
   const getDocumentIcon = (type: string) => {
@@ -276,7 +277,8 @@ export default function Documents() {
     } else if (accessLevel === "admin") {
       return filtered;
     } else {
-      return [];
+      // For non-signed in users, only show public documents
+      return filtered.filter((doc) => doc.visibility === "public");
     }
   };
   
@@ -332,23 +334,66 @@ export default function Documents() {
         <main className="pt-16 md:pt-20">
           <section className="py-16 bg-[#F5F5DC] bg-opacity-50 min-h-screen">
             <div className="container mx-auto px-6">
-              <h2 className="text-3xl font-bold mb-8 text-center text-[#2C5E1A]">
-                Ranch Documents
-              </h2>
-              <p className="text-center max-w-3xl mx-auto mb-8">
-                This section contains all current documents for Riverwood Ranch.
-              </p>
-              <div className="max-w-md mx-auto bg-white rounded-lg shadow-md overflow-hidden p-8">
-                <h3 className="text-xl font-semibold text-center mb-6 text-[#2C5E1A]">
-                  Document Access
-                </h3>
-                <p className="text-sm text-gray-600 mb-8 text-center">
-                  Please enter your passcode to access ranch documents.
-                  <br />
-                  <br />
-                </p>
-                <PasscodeLogin onSuccess={handleLoginSuccess} />
+              <div className="flex justify-between items-center mb-8">
+                <h2 className="text-3xl font-bold text-[#2C5E1A]">
+                  Ranch Documents
+                </h2>
+              
               </div>
+              <p className="text-start max-w-3xl mb-6">
+                Access important documents related to Riverwood Ranch. Sign in to view additional documents.
+              </p>
+
+              {/* Public Documents Section */}
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {documents?.filter(doc => doc.visibility === 'public' && !doc.archived).map((doc) => (
+                  <div
+                    key={doc.id}
+                    className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300 cursor-pointer"
+                    onClick={() => setPreviewDocument(doc)}
+                  >
+                    <div className="p-6">
+                      <div className="flex justify-between mb-1">
+                        <div className="flex items-center">
+                          {getDocumentIcon(doc.type)}
+                          <h3 className="font-semibold text-lg">{doc.title}</h3>
+                        </div>
+                        <div onClick={(e) => e.stopPropagation()}>
+                          <a
+                            href={doc.fileContent}
+                            download
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            <Download className="w-4 h-4 text-gray-500 hover:text-[#2C5E1A]" />
+                          </a>
+                        </div>
+                      </div>
+                      <div className="mb-3 ml-9">
+                        {getVisibilityBadge(doc.visibility)}
+                      </div>
+                      <p className="text-sm mb-4 text-gray-600">
+                        {doc.description}
+                      </p>
+                      <div className="flex justify-start items-center">
+                        <span className="text-xs text-gray-500">
+                          Updated: {new Date(doc.uploadDate).toLocaleDateString()}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Login Modal */}
+              <Dialog open={isLoginModalOpen} onOpenChange={setIsLoginModalOpen}>
+                <DialogContent>
+                  <DialogHeader>
+                    <DialogTitle>Access Protected Documents</DialogTitle>
+                  </DialogHeader>
+                  <PasscodeLogin onSuccess={handleLoginSuccess} />
+                </DialogContent>
+              </Dialog>
             </div>
           </section>
         </main>

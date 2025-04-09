@@ -1,9 +1,18 @@
 import { useState, useEffect, createContext, useContext } from "react";
-import { Menu, X, Sun, LogOut, ShieldCheck, User } from "lucide-react";
+import { Menu, X, Sun, LogOut, ShieldCheck, User, ArrowLeft } from "lucide-react";
 import { Link, useLocation } from "wouter";
 import { scrollToElement } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import PasscodeLogin, { AccessLevel as LoginAccessLevel } from "@/components/PasscodeLogin";
 
 // Define access level type
 export type NavbarAccessLevel = "none" | "user" | "admin";
@@ -22,7 +31,6 @@ export const useAccessLevel = () => useContext(AccessLevelContext);
 
 // Links for scrolling within the homepage
 const scrollLinks = [
-  { name: "Home", href: "#home" },
   { name: "About", href: "#about" },
   { name: "Board", href: "#board" },
   { name: "Properties", href: "#properties" },
@@ -30,29 +38,25 @@ const scrollLinks = [
 ];
 
 // Links for navigating to separate pages
-const pageLinks = [{ name: "Documents", href: "/documents" }];
+const pageLinks = [
+  { name: "Documents", href: "/documents" },
+];
 
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [location] = useLocation();
+  const [location, setLocation] = useLocation();
   const [isHomePage, setIsHomePage] = useState(true);
+  const [isRanchPortal, setIsRanchPortal] = useState(false);
   const [prevScrollPos, setPrevScrollPos] = useState(0);
   const [visible, setVisible] = useState(true);
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
 
   // Get access level from context
   const { accessLevel, setAccessLevel } = useAccessLevel();
 
   useEffect(() => {
-    if (accessLevel === "none") return;
-    if (location === "/documents") return;
-  
-    setAccessLevel("none");
-    setIsMenuOpen(false);
-  }, [location]);
-  
-
-  useEffect(() => {
     setIsHomePage(location === "/");
+    setIsRanchPortal(location === "/ranch-portal");
   }, [location]);
 
   useEffect(() => {
@@ -78,6 +82,11 @@ export default function Navbar() {
     setIsMenuOpen(false);
   };
 
+  const handleLoginSuccess = (level: LoginAccessLevel) => {
+    setAccessLevel(level);
+    setIsLoginModalOpen(false);
+  };
+
   return (
     <header
       className={`fixed top-0 left-0 w-full bg-[#2C5E1A] text-white shadow-md z-50 transition-transform duration-300 ${
@@ -87,7 +96,15 @@ export default function Navbar() {
       <div className="container mx-auto px-4 py-4 flex flex-col md:flex-row justify-between items-center">
         <div className="flex items-center mb-4 md:mb-0 justify-between w-full md:w-auto">
           <Link href="/">
-            <div className="flex items-center cursor-pointer">
+            <div 
+              className="flex items-center cursor-pointer"
+              onClick={(e) => {
+                if (isHomePage) {
+                  e.preventDefault();
+                  scrollToElement("home");
+                }
+              }}
+            >
               <Sun className="mr-3 text-[#D4AF37]" size={30} />
               <h1 className="font-bold text-2xl md:text-3xl">Riverwood Ranch</h1>
             </div>
@@ -101,12 +118,12 @@ export default function Navbar() {
           </button>
         </div>
 
-        <div className="flex items-center">
+        <div className="flex-1 flex justify-center">
           <nav
             className={`w-full md:w-auto ${isMenuOpen ? "block" : "hidden md:block"}`}
           >
-            <ul className="flex flex-col md:flex-row gap-1 md:gap-6 text-sm md:text-base">
-              {isHomePage &&
+            <ul className="flex flex-col md:flex-row gap-1 md:gap-6 text-sm md:text-base items-center">
+              {(isHomePage || accessLevel !== "none" || location === "/documents" || isRanchPortal) &&
                 scrollLinks.map((link) => (
                   <li key={link.name}>
                     <a
@@ -115,31 +132,21 @@ export default function Navbar() {
                       onClick={(e) => {
                         e.preventDefault();
                         setIsMenuOpen(false);
-                        scrollToElement(link.href.substring(1));
+                        if (location === "/documents" || isRanchPortal) {
+                          setLocation("/");
+                          // Wait for navigation to complete before scrolling
+                          setTimeout(() => {
+                            scrollToElement(link.href.substring(1));
+                          }, 100);
+                        } else {
+                          scrollToElement(link.href.substring(1));
+                        }
                       }}
                     >
                       {link.name}
                     </a>
                   </li>
                 ))}
-
-              {accessLevel !== "none" && (
-                <div
-                  className={`flex items-center mt-4 md:mt-0 md:ml-6 ${isMenuOpen ? "block" : "hidden md:flex"} pointer-events-none`}
-                >
-                  <Badge className="mr-2 bg-[#4C8033] text-white border-0 flex items-center">
-                    {accessLevel === "admin" ? (
-                      <>
-                        <ShieldCheck className="mr-1 h-3 w-3" /> Board Member
-                      </>
-                    ) : (
-                      <>
-                        <User className="mr-1 h-3 w-3" /> Private
-                      </>
-                    )}
-                  </Badge>
-                </div>
-              )}
 
               {pageLinks.map((link) => (
                 <li key={link.name}>
@@ -148,7 +155,12 @@ export default function Navbar() {
                       className={`block px-3 py-2 rounded hover:bg-[#4C8033] transition-colors duration-300 cursor-pointer ${
                         location === link.href ? "bg-[#4C8033]" : ""
                       }`}
-                      onClick={() => setIsMenuOpen(false)}
+                      onClick={() => {
+                        setIsMenuOpen(false);
+                        if (link.href === "/documents") {
+                          window.scrollTo({ top: 0, behavior: "smooth" });
+                        }
+                      }}
                     >
                       {link.name}
                     </span>
@@ -156,7 +168,7 @@ export default function Navbar() {
                 </li>
               ))}
 
-              {!isHomePage && (
+              {!isHomePage && location !== "/documents" && !isRanchPortal && (
                 <li>
                   <Link href="/">
                     <span
@@ -170,7 +182,58 @@ export default function Navbar() {
               )}
             </ul>
           </nav>
-          {accessLevel !== "none" && !isHomePage && (
+        </div>
+
+        <div className="flex items-center gap-4">
+          {accessLevel !== "none" && (
+            <>
+              <Badge className="bg-[#4C8033] text-white border-0 flex items-center pointer-events-none">
+                {accessLevel === "admin" ? (
+                  <>
+                    <ShieldCheck className="mr-1 h-3 w-3" /> Board
+                  </>
+                ) : (
+                  <>
+                    <User className="mr-1 h-3 w-3" /> Private
+                  </>
+                )}
+              </Badge>
+              {isRanchPortal ? (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="bg-white text-[#2C5E1A] hover:bg-[#4C8033] hover:text-white border-[#2C5E1A]"
+                  onClick={() => setLocation("/")}
+                >
+                  Welcome Page
+                </Button>
+              ) : (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="bg-white text-[#2C5E1A] hover:bg-[#4C8033] hover:text-white border-[#2C5E1A]"
+                  onClick={() => setLocation("/ranch-portal")}
+                >
+                  Ranch Portal
+                </Button>
+              )}
+            </>
+          )}
+          {accessLevel === "none" ? (
+            <Dialog open={isLoginModalOpen} onOpenChange={setIsLoginModalOpen}>
+              <DialogTrigger asChild>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="bg-white text-[#2C5E1A] hover:bg-[#4C8033] hover:text-white border-[#2C5E1A]"
+                  onClick={() => setIsLoginModalOpen(true)}
+                >
+                  Sign In
+                </Button>
+              </DialogTrigger>
+              <PasscodeLogin onSuccess={handleLoginSuccess} />
+            </Dialog>
+          ) : (
             <Button
               variant="ghost"
               size="sm"

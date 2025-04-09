@@ -96,18 +96,12 @@ export default function Footer() {
                 <MapPin className="mt-1 mr-3 text-[#D4AF37]" size={16} />
                 <span>PO Box 12345, Los Angeles, CA 90001</span>
               </li>
-              <li className="flex items-start">
-                <Phone className="mt-1 mr-3 text-[#D4AF37]" size={16} />
-                <span>(888) 555-0123</span>
-              </li>
+             
               <li className="flex items-start">
                 <Mail className="mt-1 mr-3 text-[#D4AF37]" size={16} />
                 <span>board@riverwoodranch.org</span>
               </li>
-              <li className="flex items-start">
-                <Clock className="mt-1 mr-3 text-[#D4AF37]" size={16} />
-                <span>Board meetings: First Tuesday, 7PM</span>
-              </li>
+             
             </ul>
           </div>
         </div>

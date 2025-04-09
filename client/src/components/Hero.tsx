@@ -15,7 +15,7 @@ export default function Hero() {
         <div className="max-w-2xl">
           <h2 className="text-4xl md:text-5xl font-bold mb-4">Welcome to Riverwood Ranch</h2>
           <p className="text-lg md:text-xl mb-8">
-            A serene community nestled in the heart of Southern California, Los Angeles
+            A serene community nestled in the heart of Southern California
           </p>
           <div className="flex flex-col sm:flex-row gap-4">
             <Button 
@@ -28,7 +28,7 @@ export default function Hero() {
             
             <Button 
               variant="outline" 
-              className="border-white text-white hover:bg-white hover:text-[#2C5E1A] px-6 py-6 rounded-md transition-colors duration-300 font-medium"
+              className="border-white text-[#2C5E1A] bg-white hover:bg-gray-100 px-6 py-6 rounded-md transition-colors duration-300 font-medium"
               onClick={() => scrollToElement('contact')}
             >
               Contact Us <Mail className="ml-2 h-4 w-4" />

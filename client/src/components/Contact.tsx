@@ -344,16 +344,7 @@ export default function Contact() {
                   </div>
                 </div>
                 
-                <div className="flex items-start">
-                  <div className="bg-[#2C5E1A] bg-opacity-10 p-3 rounded-full mr-4">
-                    <AlertCircle className="text-[#2C5E1A]" size={20} />
-                  </div>
-                  <div>
-                    <h4 className="font-medium mb-1">Road Emergencies</h4>
-                    <p className="text-gray-600">(310) 555-9876</p>
-                    <p className="text-sm text-gray-500 mt-1">For urgent road issues requiring immediate attention</p>
-                  </div>
-                </div>
+                
               </div>
             </div>
           </div>

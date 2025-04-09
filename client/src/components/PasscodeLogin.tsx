@@ -1,11 +1,18 @@
 import { useState } from "react";
+import { ShieldCheck, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { Alert, AlertDescription } from "@/components/ui/alert";
-import { AlertCircle } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
 
 // Define access levels
-export type AccessLevel = 'user' | 'admin';
+export type AccessLevel = "user" | "admin";
 
 // Define properties for the PasscodeLogin component
 interface PasscodeLoginProps {
@@ -19,72 +26,76 @@ const ADMIN_PASSCODE = "7799";
 
 export default function PasscodeLogin({ onSuccess }: PasscodeLoginProps) {
   const [passcode, setPasscode] = useState("");
-  const [error, setError] = useState<string | null>(null);
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const { toast } = useToast();
 
-  const handlePasscodeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const value = event.target.value;
-    setPasscode(value);
-    setError(null);
-  };
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsLoading(true);
 
-  const handleSubmit = (event: React.FormEvent) => {
-    event.preventDefault();
-    
-    
-    setIsSubmitting(true);
-    
-    // Check passcode after a short delay to simulate verification
+    // Simulate API call delay
     setTimeout(() => {
       if (passcode === ADMIN_PASSCODE) {
-        onSuccess('admin');
+        onSuccess("admin");
+        toast({
+          title: "Welcome, Board Member",
+          description: "You now have access to all documents and features.",
+        });
       } else if (passcode === USER_PASSCODE) {
-        onSuccess('user');
+        onSuccess("user");
+        toast({
+          title: "Welcome",
+          description: "You now have access to protected documents.",
+        });
       } else {
-        setError("Invalid passcode. Please try again.");
+        toast({
+          title: "Invalid Passcode",
+          description: "Please try again with the correct passcode.",
+          variant: "destructive",
+        });
       }
-      setIsSubmitting(false);
-    }, 600);
+      setIsLoading(false);
+      setPasscode("");
+    }, 500);
   };
 
   return (
-    <div className="w-full">
-      <form onSubmit={handleSubmit}>
-        <div className="mb-4">
-          <label htmlFor="passcode" className="block text-sm font-medium text-gray-700 mb-1">
-            Enter your passcode
-          </label>
-          <div className="flex space-x-2">
-            <Input
-              id="passcode"
-              type="password"
-              value={passcode}
-              onChange={handlePasscodeChange}
-              disabled={isSubmitting}
-              className="text-center"
-              autoComplete="off"
-            />
+    <DialogContent className="sm:max-w-[425px]">
+      <DialogHeader>
+        <DialogTitle>Enter Passcode</DialogTitle>
+        <DialogDescription>
+          Please enter your passcode to access protected content.
+        </DialogDescription>
+      </DialogHeader>
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <div className="space-y-2">
+          <Input
+            type="password"
+            placeholder="Enter password"
+            value={passcode}
+            onChange={(e) => setPasscode(e.target.value)}
+            className="text-center text-lg tracking-widest"
+            autoFocus
+          />
+        </div>
+        <div className="flex justify-between text-sm text-gray-500">
+          <div className="flex items-center">
+            <User className="h-4 w-4 mr-1" />
+            <span>User: {USER_PASSCODE}</span>
+          </div>
+          <div className="flex items-center">
+            <ShieldCheck className="h-4 w-4 mr-1" />
+            <span>Admin: {ADMIN_PASSCODE}</span>
           </div>
         </div>
-        
-        {error && (
-          <Alert variant="destructive" className="mb-4">
-            <AlertCircle className="h-4 w-4" />
-            <AlertDescription>{error}</AlertDescription>
-          </Alert>
-        )}
-        
-        <Button 
+        <Button
           type="submit"
           className="w-full bg-[#2C5E1A] hover:bg-[#4C8033]"
+          disabled={isLoading || passcode.length !== 4}
         >
-          {isSubmitting ? "Verifying..." : "Access Documents"}
+          {isLoading ? "Verifying..." : "Submit"}
         </Button>
       </form>
-      
-      <div className="mt-3 text-xs text-center text-gray-500">
-        <p>Enter your passcode to access Ranch documents.</p>
-      </div>
-    </div>
+    </DialogContent>
   );
 }
