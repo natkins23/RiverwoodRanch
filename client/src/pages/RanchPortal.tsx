@@ -102,11 +102,9 @@ export default function RanchPortal() {
                     <Dialog open={isAddEventOpen} onOpenChange={setIsAddEventOpen}>
                       <DialogTrigger asChild>
                         <Button
-                          variant="ghost"
-                          size="sm"
-                          className="text-[#2C5E1A] hover:bg-[#4C8033] hover:text-white"
+                          className="bg-[#2C5E1A] hover:bg-[#4C8033] text-white"
                         >
-                          Add Event
+                          <Calendar className="mr-2 h-4 w-4" /> Add Event
                         </Button>
                       </DialogTrigger>
                       <DialogContent>
@@ -228,11 +226,9 @@ export default function RanchPortal() {
                     <Dialog open={isNewPostOpen} onOpenChange={setIsNewPostOpen}>
                       <DialogTrigger asChild>
                         <Button
-                          variant="ghost"
-                          size="sm"
-                          className="text-[#2C5E1A] hover:bg-[#4C8033] hover:text-white"
+                          className="bg-[#2C5E1A] hover:bg-[#4C8033] text-white"
                         >
-                          New Post
+                          <Newspaper className="mr-2 h-4 w-4" /> New Post
                         </Button>
                       </DialogTrigger>
                       <DialogContent>
@@ -299,9 +295,7 @@ export default function RanchPortal() {
                     <h2 className="text-xl font-semibold">Documents</h2>
                   </div>
                   <Button
-                    variant="ghost"
-                    size="sm"
-                    className="text-[#2C5E1A] hover:bg-[#4C8033] hover:text-white"
+                    className="bg-[#2C5E1A] hover:bg-[#4C8033] text-white"
                     onClick={() => setLocation("/records")}
                   >
                     View All
