@@ -28,14 +28,20 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Get all documents
   app.get("/api/documents", async (req: Request, res: Response) => {
     try {
-      // Sync with Firebase first to ensure we have the latest documents
-      await storage.syncWithFirebase();
+      // Attempt to sync with Firebase first to ensure we have the latest documents
+      try {
+        await storage.syncWithFirebase();
+      } catch (syncError) {
+        console.error("Error syncing with Firebase, proceeding with local documents:", syncError);
+        // Continue with local documents if Firebase sync fails
+      }
       
+      // Always get documents from storage even if Firebase sync fails
       const documents = await storage.getAllDocuments();
       res.json(documents);
     } catch (error) {
       console.error("Error fetching documents:", error);
-      res.status(500).json({ message: "Failed to fetch documents" });
+      res.status(500).json({ error: "Failed to fetch documents" });
     }
   });
 
