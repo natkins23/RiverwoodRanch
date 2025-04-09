@@ -218,7 +218,7 @@ export default function Navbar() {
                 <Button
                   variant="outline"
                   size="sm"
-                  className="bg-white text-[#2C5E1A] hover:bg-[#4C8033] hover:text-white border-[#2C5E1A]"
+                  className="bg-white text-[#2C5E1A] hover:bg-[#4C8033] hover:text-white border-[#2C5E1A] w-32"
                   onClick={() => setLocation("/")}
                 >
                   Welcome Page
@@ -227,7 +227,7 @@ export default function Navbar() {
                 <Button
                   variant="outline"
                   size="sm"
-                  className="bg-white text-[#2C5E1A] hover:bg-[#4C8033] hover:text-white border-[#2C5E1A]"
+                  className="bg-white text-[#2C5E1A] hover:bg-[#4C8033] hover:text-white border-[#2C5E1A] w-32"
                   onClick={() => setLocation("/ranch-portal")}
                 >
                   Ranch Portal
