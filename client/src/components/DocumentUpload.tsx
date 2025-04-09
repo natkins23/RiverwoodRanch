@@ -59,15 +59,15 @@ export default function DocumentUpload({ accessLevel = 'admin' }: DocumentUpload
   
   const uploadMutation = useMutation({
     mutationFn: async (data: FormData) => {
-      const response = await apiRequest("POST", "/api/documents", data);
+      const response = await apiRequest("POST", "/api/records", data);
       return response.json();
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['/api/documents'] });
+      queryClient.invalidateQueries({ queryKey: ['/api/records'] });
       form.reset();
       toast({
-        title: "Document uploaded",
-        description: "Your document has been uploaded successfully.",
+        title: "Record uploaded",
+        description: "Your record has been uploaded successfully.",
       });
     },
     onError: (error) => {
@@ -136,9 +136,9 @@ export default function DocumentUpload({ accessLevel = 'admin' }: DocumentUpload
           name="title"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Document Title</FormLabel>
+              <FormLabel>Record Title</FormLabel>
               <FormControl>
-                <Input placeholder="Enter document title" {...field} />
+                <Input placeholder="Enter record title" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -150,14 +150,14 @@ export default function DocumentUpload({ accessLevel = 'admin' }: DocumentUpload
           name="type"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Document Type</FormLabel>
+              <FormLabel>Record Type</FormLabel>
               <Select 
                 onValueChange={field.onChange} 
                 defaultValue={field.value}
               >
                 <FormControl>
                   <SelectTrigger>
-                    <SelectValue placeholder="Select document type" />
+                    <SelectValue placeholder="Select record type" />
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
@@ -180,7 +180,7 @@ export default function DocumentUpload({ accessLevel = 'admin' }: DocumentUpload
           name="file"
           render={({ field: { value, onChange, ...fieldProps } }) => (
             <FormItem>
-              <FormLabel>Document File</FormLabel>
+              <FormLabel>Record File</FormLabel>
               <FormControl>
                 <div 
                   className={`border border-dashed rounded-md p-6 text-center bg-gray-50 ${
@@ -197,7 +197,7 @@ export default function DocumentUpload({ accessLevel = 'admin' }: DocumentUpload
                       Drag and drop your file here, or click to select
                     </p>
                     <p className="text-xs text-gray-400">
-                      Supported formats: PDF, DOC, DOCX (Max 25MB)
+                      Supported formats: PDF, DOC, DOCX, JPG, PNG, GIF (Max 25MB)
                     </p>
                     {value && (
                       <p className="text-sm text-[#2C5E1A] mt-2">
@@ -209,7 +209,7 @@ export default function DocumentUpload({ accessLevel = 'admin' }: DocumentUpload
                     id="documentFile"
                     type="file"
                     className="hidden"
-                    accept=".pdf,.doc,.docx,.xls,.xlsx"
+                    accept=".pdf,.doc,.docx,.xls,.xlsx,.jpg,.jpeg,.png,.gif"
                     onChange={handleFileInputChange}
                     {...fieldProps}
                   />
@@ -228,7 +228,7 @@ export default function DocumentUpload({ accessLevel = 'admin' }: DocumentUpload
               <FormLabel>Description</FormLabel>
               <FormControl>
                 <Textarea 
-                  placeholder="Brief description of the document" 
+                  placeholder="Brief description of the record" 
                   rows={3} 
                   {...field} 
                 />
@@ -243,7 +243,7 @@ export default function DocumentUpload({ accessLevel = 'admin' }: DocumentUpload
           name="visibility"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Document Visibility</FormLabel>
+              <FormLabel>Record Visibility</FormLabel>
               <Select 
                 onValueChange={field.onChange} 
                 defaultValue={field.value}
@@ -262,8 +262,8 @@ export default function DocumentUpload({ accessLevel = 'admin' }: DocumentUpload
               </Select>
               <p className="text-xs text-muted-foreground mt-1">
                 {accessLevel === 'admin' 
-                  ? "Select who can view this document" 
-                  : "Only admin users can change document visibility"}
+                  ? "Select who can view this record" 
+                  : "Only admin users can change record visibility"}
               </p>
               <FormMessage />
             </FormItem>
@@ -281,7 +281,7 @@ export default function DocumentUpload({ accessLevel = 'admin' }: DocumentUpload
               Uploading...
             </>
           ) : (
-            "Upload Document"
+            "Upload"
           )}
         </Button>
       </form>

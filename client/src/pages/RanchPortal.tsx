@@ -302,7 +302,7 @@ export default function RanchPortal() {
                     variant="ghost"
                     size="sm"
                     className="text-[#2C5E1A] hover:bg-[#4C8033] hover:text-white"
-                    onClick={() => setLocation("/documents")}
+                    onClick={() => setLocation("/records")}
                   >
                     View All
                     <ArrowRight className="ml-2 h-4 w-4" />

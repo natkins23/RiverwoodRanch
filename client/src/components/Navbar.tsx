@@ -39,7 +39,7 @@ const scrollLinks = [
 
 // Links for navigating to separate pages
 const pageLinks = [
-  { name: "Documents", href: "/documents" },
+  { name: "Records", href: "/records" },
 ];
 
 export default function Navbar() {
@@ -123,7 +123,7 @@ export default function Navbar() {
             className={`w-full md:w-auto ${isMenuOpen ? "block" : "hidden md:block"}`}
           >
             <ul className="flex flex-col md:flex-row gap-1 md:gap-6 text-sm md:text-base items-center">
-              {(isHomePage || accessLevel !== "none" || location === "/documents" || isRanchPortal) &&
+              {(isHomePage || accessLevel !== "none" || location === "/records" || isRanchPortal) &&
                 scrollLinks.map((link) => (
                   <li key={link.name}>
                     <a
@@ -132,7 +132,7 @@ export default function Navbar() {
                       onClick={(e) => {
                         e.preventDefault();
                         setIsMenuOpen(false);
-                        if (location === "/documents" || isRanchPortal) {
+                        if (location === "/records" || isRanchPortal) {
                           setLocation("/");
                           // Wait for navigation to complete before scrolling
                           setTimeout(() => {
@@ -157,7 +157,7 @@ export default function Navbar() {
                       }`}
                       onClick={() => {
                         setIsMenuOpen(false);
-                        if (link.href === "/documents") {
+                        if (link.href === "/records") {
                           window.scrollTo({ top: 0, behavior: "smooth" });
                         }
                       }}
@@ -168,7 +168,7 @@ export default function Navbar() {
                 </li>
               ))}
 
-              {!isHomePage && location !== "/documents" && !isRanchPortal && (
+              {!isHomePage && location !== "/records" && !isRanchPortal && (
                 <li>
                   <Link href="/">
                     <span
