@@ -108,7 +108,13 @@ export default function Properties() {
                 ))}
               </ul>
 
-              <p className="text-sm text-gray-600 italic">
+              </div>
+
+            <div className="bg-white rounded-lg shadow-md p-6 mb-8">
+              <h3 className="text-xl font-semibold mb-4 text-[#2C5E1A]">
+                Property Owner Obligations
+              </h3>
+              <p className="text-sm">
                 NOTE: All property owners are legally required to pay annual
                 dues to the Riverwood Ranch Corporation. These dues are used to
                 cover the costs of maintaining the shared road easement and
