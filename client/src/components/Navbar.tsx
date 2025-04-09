@@ -32,7 +32,6 @@ export const useAccessLevel = () => useContext(AccessLevelContext);
 // Links for scrolling within the homepage
 const scrollLinks = [
   { name: "About", href: "#about" },
-  { name: "Board", href: "#board" },
   { name: "Properties", href: "#properties" },
   { name: "Contact", href: "#contact" },
 ];

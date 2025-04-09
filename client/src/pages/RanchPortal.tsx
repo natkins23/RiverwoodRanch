@@ -1,5 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { Calendar, FileText, Newspaper, ArrowRight } from "lucide-react";
+import { Calendar, FileText, Newspaper, ArrowRight, Users } from "lucide-react";
 import { useAccessLevel } from "@/components/Navbar";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -19,6 +19,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { createEvent, getEvents, type Event } from "@/services/firebase";
+import { BoardMember } from "@shared/schema";
 
 export default function RanchPortal() {
   const { accessLevel } = useAccessLevel();
@@ -48,6 +49,11 @@ export default function RanchPortal() {
 
   const { data: posts, isLoading: postsLoading } = useQuery({
     queryKey: ["/api/blog"],
+    enabled: accessLevel !== "none",
+  });
+  
+  const { data: boardMembers, isLoading: boardLoading } = useQuery<BoardMember[]>({
+    queryKey: ['/api/board-members'],
     enabled: accessLevel !== "none",
   });
 
@@ -282,6 +288,44 @@ export default function RanchPortal() {
                   ) : (
                     <div className="h-full min-h-[200px] flex items-center justify-center">
                       <p className="text-gray-500">No blog posts available</p>
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* Board Members Section */}
+              <div className="bg-white rounded-lg shadow-md p-6 md:col-span-2">
+                <div className="flex items-center justify-between mb-6">
+                  <div className="flex items-center">
+                    <Users className="h-6 w-6 text-[#2C5E1A] mr-3" />
+                    <h2 className="text-xl font-semibold">Board Members</h2>
+                  </div>
+                </div>
+                
+                <p className="text-gray-600 mb-6">
+                  Our dedicated board members oversee the management of Riverwood Ranch, ensuring the community's needs are met. 
+                  Feel free to reach out to them for any inquiries or concerns at board@riverwoodranch.org
+                </p>
+
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  {boardLoading ? (
+                    Array(3).fill(0).map((_, index) => (
+                      <div key={index} className="bg-[#F5F5DC] rounded-lg p-6 shadow-md">
+                        <div className="h-6 bg-gray-200 rounded w-1/2 mb-2 animate-pulse"></div>
+                        <div className="h-4 bg-gray-200 rounded w-1/3 mb-3 animate-pulse"></div>
+                        <div className="h-4 bg-gray-200 rounded w-full animate-pulse"></div>
+                      </div>
+                    ))
+                  ) : boardMembers && boardMembers.length > 0 ? (
+                    boardMembers.map((member) => (
+                      <div key={member.id} className="bg-[#F5F5DC] rounded-lg p-6 shadow-md flex flex-col items-center">
+                        <h3 className="text-xl font-bold text-[#8B5A2B]">{member.name}</h3>
+                        <p className="text-[#2C5E1A] items-center font-medium mb-3">{member.position}</p>
+                      </div>
+                    ))
+                  ) : (
+                    <div className="col-span-3 text-center py-10">
+                      <p className="text-gray-500">No board members information available.</p>
                     </div>
                   )}
                 </div>
