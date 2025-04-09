@@ -58,10 +58,11 @@ export default function Board() {
       
       // Update the local cache with new data
       queryClient.setQueryData(['/api/board-members'], editingMembers);
-      setIsEditModalOpen(false);
     } catch (error) {
       console.error('Failed to save board members:', error);
     }
+    // Close modal regardless of success or failure
+    setIsEditModalOpen(false);
   };
 
   return (
