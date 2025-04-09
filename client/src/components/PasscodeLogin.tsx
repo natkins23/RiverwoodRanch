@@ -39,18 +39,18 @@ export default function PasscodeLogin({ onSuccess }: PasscodeLoginProps) {
     setTimeout(() => {
       if (passcode === ADMIN_PASSCODE) {
         onSuccess("admin");
+        setLocation("/ranch-portal");
         toast({
           title: "Welcome, Board Member",
           description: "You now have access to all documents and features.",
         });
-        setLocation("/ranch-portal");
       } else if (passcode === USER_PASSCODE) {
         onSuccess("user");
+        setLocation("/ranch-portal");
         toast({
           title: "Welcome",
           description: "You now have access to protected documents.",
         });
-        setLocation("/ranch-portal");
       } else {
         toast({
           title: "Invalid Passcode",
