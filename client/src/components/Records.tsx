@@ -357,7 +357,7 @@ export default function Records() {
                       className="text-blue-600 hover:underline"
                       onClick={() => setIsLoginModalOpen(true)}
                     >
-                      Login with passcode
+                      Login here
                     </button>{" "}
                     to view all available records.
                   </span>
