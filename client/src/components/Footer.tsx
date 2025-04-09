@@ -84,6 +84,11 @@ export default function Footer() {
                 <Link
                   href="/records"
                   className="text-gray-300 hover:text-white transition-colors duration-300 cursor-pointer"
+                  onClick={() => {
+                    setTimeout(() => {
+                      window.scrollTo({ top: 0, behavior: "smooth" });
+                    }, 100);
+                  }}
                 >
                   Records
                 </Link>

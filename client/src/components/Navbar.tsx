@@ -176,7 +176,9 @@ export default function Navbar() {
                       onClick={() => {
                         setIsMenuOpen(false);
                         if (link.href === "/records") {
-                          window.scrollTo({ top: 0, behavior: "smooth" });
+                          setTimeout(() => {
+                            window.scrollTo({ top: 0, behavior: "smooth" });
+                          }, 100);
                         }
                       }}
                     >
