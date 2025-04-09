@@ -403,6 +403,7 @@ export default function RanchPortal() {
                                   body: JSON.stringify(boardMembers)
                                 });
                                 queryClient.invalidateQueries({ queryKey: ['/api/board-members'] });
+                                setIsEditModalOpen(false);
                               } catch (error) {
                                 console.error('Failed to save board members:', error);
                               }
