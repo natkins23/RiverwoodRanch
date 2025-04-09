@@ -15,7 +15,7 @@ export default function About() {
       <div className="container mx-auto px-6">
         <div className="flex flex-col md:flex-row gap-12">
           <div className="md:w-1/2">
-            <h2 className="text-3xl font-bold mb-6 text-[#2C5E1A]">About Riverwood Ranch</h2>
+            <h2 className="text-3xl font-bold mb-6 text-[#2C5E1A] pt-6">About Riverwood Ranch</h2>
             <p className="mb-4">
               Riverwood Ranch is a private community corporation established to maintain the easement of roads serving 36 properties in Southern California. Located in the beautiful landscape of Los Angeles County, our ranch combines the tranquility of nature with the convenience of city proximity.
             </p>

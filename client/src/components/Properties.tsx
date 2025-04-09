@@ -13,7 +13,7 @@ export default function Properties() {
   return (
     <section id="properties" className="py-16 bg-[#F5F5DC] bg-opacity-50">
       <div className="container mx-auto px-6">
-        <h2 className="text-3xl font-bold mb-8 text-center text-[#2C5E1A]">Our Properties</h2>
+        <h2 className="text-3xl font-bold mb-8 text-center text-[#2C5E1A] pt-6">Our Properties</h2>
         <p className="text-center max-w-3xl mx-auto mb-12">
           Riverwood Ranch encompasses 36 unique properties connected by our shared road network. Below is information about our community and road easement management.
         </p>

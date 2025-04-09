@@ -121,7 +121,7 @@ export default function Contact() {
   return (
     <section id="contact" className="py-16 bg-white">
       <div className="container mx-auto px-6">
-        <h2 className="text-3xl font-bold mb-8 text-center text-[#2C5E1A]">Contact Us</h2>
+        <h2 className="text-3xl font-bold mb-8 text-center text-[#2C5E1A] pt-6">Contact Us</h2>
         <p className="text-center max-w-3xl mx-auto mb-12">
           Have questions about Riverwood Ranch? Our board members are here to help. Fill out the form below, and we'll get back to you as soon as possible.
         </p>
