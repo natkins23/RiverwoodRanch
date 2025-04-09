@@ -33,8 +33,8 @@ import { Document } from "@shared/schema";
 import ScrollToTop from "@/components/ScrollToTop";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import Documents from "@/components/Documents";
+import Records from "@/components/Records";
 
 export default function RecordsPage() {
-  return <Documents/>
+  return <Records/>
 }

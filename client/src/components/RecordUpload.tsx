@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -30,7 +29,7 @@ import { Textarea } from "@/components/ui/textarea";
 
 const uploadFormSchema = z.object({
   title: z.string().min(1, "Title is required").min(3, "Title must be at least 3 characters"),
-  type: z.string().min(1, "Document type is required"),
+  type: z.string().min(1, "Record type is required"),
   description: z.string().min(1, "Description is required").min(10, "Description must be at least 10 characters"),
   visibility: z.string().min(1, "Visibility is required"),
   file: z.instanceof(File, { message: "Please select a file" }).refine(file => file.size > 0, "Please select a file")
@@ -38,11 +37,11 @@ const uploadFormSchema = z.object({
 
 type UploadFormValues = z.infer<typeof uploadFormSchema>;
 
-interface DocumentUploadProps {
+interface RecordUploadProps {
   accessLevel?: 'user' | 'admin';
 }
 
-export default function DocumentUpload({ accessLevel = 'admin' }: DocumentUploadProps) {
+export default function RecordUpload({ accessLevel = 'admin' }: RecordUploadProps) {
   const [isDragging, setIsDragging] = useState(false);
   const { toast } = useToast();
   
@@ -73,7 +72,7 @@ export default function DocumentUpload({ accessLevel = 'admin' }: DocumentUpload
     onError: (error) => {
       toast({
         title: "Upload failed",
-        description: error.message || "Failed to upload document. Please try again.",
+        description: error.message || "Failed to upload record. Please try again.",
         variant: "destructive",
       });
     }
@@ -189,7 +188,7 @@ export default function DocumentUpload({ accessLevel = 'admin' }: DocumentUpload
                   onDragOver={handleDragOver}
                   onDragLeave={handleDragLeave}
                   onDrop={handleDrop}
-                  onClick={() => document.getElementById('documentFile')?.click()}
+                  onClick={() => document.getElementById('recordFile')?.click()}
                 >
                   <div className="space-y-2">
                     <CloudUpload className="mx-auto text-gray-400" size={24} />
@@ -206,7 +205,7 @@ export default function DocumentUpload({ accessLevel = 'admin' }: DocumentUpload
                     )}
                   </div>
                   <input
-                    id="documentFile"
+                    id="recordFile"
                     type="file"
                     className="hidden"
                     accept=".pdf,.doc,.docx,.xls,.xlsx,.jpg,.jpeg,.png,.gif"
@@ -256,8 +255,8 @@ export default function DocumentUpload({ accessLevel = 'admin' }: DocumentUpload
                 </FormControl>
                 <SelectContent>
                   <SelectItem value="public">Public (Visible to All)</SelectItem>
-                  <SelectItem value="protected">Protected (PIN Access: 7796)</SelectItem>
-                  <SelectItem value="admin">Admin Only (PIN Access: 7799)</SelectItem>
+                  <SelectItem value="protected">Protected (Passcode Access: 7796)</SelectItem>
+                  <SelectItem value="admin">Admin Only (Passcode Access: 7799)</SelectItem>
                 </SelectContent>
               </Select>
               <p className="text-xs text-muted-foreground mt-1">

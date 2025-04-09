@@ -4,7 +4,7 @@ import { queryClient } from "@/lib/queryClient";
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 
-export function useDocuments() {
+export function useRecords() {
   const {
     data: records,
     isLoading,
@@ -20,7 +20,7 @@ export function useDocuments() {
   };
 }
 
-export function useDocumentUpload() {
+export function useRecordUpload() {
   const uploadMutation = useMutation({
     mutationFn: async (formData: FormData) => {
       const response = await apiRequest("POST", "/api/records", formData);
@@ -34,7 +34,7 @@ export function useDocumentUpload() {
   return uploadMutation;
 }
 
-export function useDocumentArchive() {
+export function useRecordArchive() {
   const archiveMutation = useMutation({
     mutationFn: async ({ id, archived }: { id: number; archived: boolean }) => {
       const response = await apiRequest("PATCH", `/api/records/${id}/archive`, { archived });
@@ -48,12 +48,12 @@ export function useDocumentArchive() {
   return archiveMutation;
 }
 
-export function useDocumentDelete() {
+export function useRecordDelete() {
   // Import useToast hook
   const { toast } = useToast();
   
   const deleteMutation = useMutation({
-    mutationFn: async (id: number) => {
+    mutationFn: async ({ id }: { id: number }) => {
       const response = await apiRequest("DELETE", `/api/records/${id}`);
       return { id, ...(await response.json()) };
     },
