@@ -55,8 +55,11 @@ export default function PasscodeLogin({ onSuccess }: PasscodeLoginProps) {
       
       if (data.success) {
         const accessLevel = data.accessLevel as AccessLevel;
-        // Only call onSuccess without duplicating the redirection
+        // Call onSuccess to update the access level
         onSuccess(accessLevel);
+        
+        // Explicitly redirect to ranch portal using wouter
+        setLocation('/ranch-portal');
         
         toast({
           title: accessLevel === "admin" 
