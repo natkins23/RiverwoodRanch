@@ -1,4 +1,5 @@
 import { QueryClient, QueryFunction } from "@tanstack/react-query";
+import { getBaseApiUrl } from "@/lib/utils";
 
 async function throwIfResNotOk(res: Response) {
   if (!res.ok) {
@@ -13,8 +14,10 @@ export async function apiRequest(
   data?: unknown | undefined,
 ): Promise<Response> {
   const isFormData = data instanceof FormData;
+  const baseApiUrl = getBaseApiUrl();
+  const fullUrl = `${baseApiUrl}${url}`;
   
-  const res = await fetch(url, {
+  const res = await fetch(fullUrl, {
     method,
     headers: data && !isFormData ? { "Content-Type": "application/json" } : {},
     body: data ? (isFormData ? data : JSON.stringify(data)) : undefined,
@@ -31,7 +34,10 @@ export const getQueryFn: <T>(options: {
 }) => QueryFunction<T> =
   ({ on401: unauthorizedBehavior }) =>
   async ({ queryKey }) => {
-    const res = await fetch(queryKey[0] as string, {
+    const baseApiUrl = getBaseApiUrl();
+    const fullUrl = `${baseApiUrl}${queryKey[0] as string}`;
+    
+    const res = await fetch(fullUrl, {
       credentials: "include",
     });
 

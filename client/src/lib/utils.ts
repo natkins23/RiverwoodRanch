@@ -58,3 +58,25 @@ export const scrollToElementWithOffset = (elementId: string) => {
     });
   }
 };
+
+/**
+ * Gets the base API URL depending on environment
+ * - Empty string in development (Vite's dev server handles proxying)
+ * - Full origin URL in production or when deployed locally
+ */
+export const getBaseApiUrl = (): string => {
+  // In development mode with Vite's dev server, we can use relative URLs
+  // as the dev server proxies API requests to the backend
+  if (import.meta.env.DEV) {
+    return '';
+  }
+  
+  // In production or when deployed locally, we need the full URL
+  // Check if we're running in a browser environment
+  if (typeof window !== 'undefined') {
+    return window.location.origin;
+  }
+  
+  // Fallback to relative URLs if we can't determine the origin
+  return '';
+};

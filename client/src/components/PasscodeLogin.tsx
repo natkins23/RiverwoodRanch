@@ -32,7 +32,12 @@ export default function PasscodeLogin({ onSuccess }: PasscodeLoginProps) {
     setIsLoading(true);
 
     try {
-      const response = await fetch('/api/validate-pin', {
+      // Get the base URL for API calls - using the same logic as in queryClient.ts
+      const baseApiUrl = typeof window !== 'undefined' 
+        ? (import.meta.env.DEV ? '' : window.location.origin) 
+        : '';
+      
+      const response = await fetch(`${baseApiUrl}/api/validate-pin`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
