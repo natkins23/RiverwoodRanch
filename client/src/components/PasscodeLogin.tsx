@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
+import { getBaseApiUrl } from "@/lib/utils";
 
 // Define access levels
 export type AccessLevel = "user" | "admin";
@@ -32,10 +33,8 @@ export default function PasscodeLogin({ onSuccess }: PasscodeLoginProps) {
     setIsLoading(true);
 
     try {
-      // Get the base URL for API calls - using the same logic as in queryClient.ts
-      const baseApiUrl = typeof window !== 'undefined' 
-        ? (import.meta.env.DEV ? '' : window.location.origin) 
-        : '';
+      // Use the utility function to get the base API URL
+      const baseApiUrl = getBaseApiUrl();
       
       const response = await fetch(`${baseApiUrl}/api/validate-pin`, {
         method: 'POST',

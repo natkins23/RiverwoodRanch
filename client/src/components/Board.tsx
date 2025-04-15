@@ -6,6 +6,8 @@ import { useAccessLevel } from "./Navbar";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "./ui/dialog";
 import { Button } from "./ui/button";
 import { useState } from "react";
+import { getBaseApiUrl } from "@/lib/utils";
+import { queryClient } from "@/lib/queryClient";
 import { Input } from "./ui/input";
 
 export default function Board() {
@@ -46,7 +48,8 @@ export default function Board() {
 
   const handleSave = async () => {
     try {
-      const response = await fetch('/api/board-members', {
+      const baseApiUrl = getBaseApiUrl();
+      const response = await fetch(`${baseApiUrl}/api/board-members`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(editingMembers)
