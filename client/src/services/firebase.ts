@@ -33,7 +33,8 @@ export const createEvent = async (eventData: Omit<Event, "id" | "createdAt">) =>
 
 // Get all events
 export const getEvents = async () => {
-  const response = await fetch('/api/events');
+  const baseApiUrl = getBaseApiUrl();
+  const response = await fetch(`${baseApiUrl}/api/events`);
   if (!response.ok) {
     throw new Error('Failed to fetch events');
   }
