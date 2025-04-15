@@ -1,8 +1,8 @@
 import { z } from "zod";
 
-export const documentUploadSchema = z.object({
+export const recordUploadSchema = z.object({
   title: z.string().min(3, "Title must be at least 3 characters"),
-  type: z.string().min(1, "Please select a document type"),
+  type: z.string().min(1, "Please select a record type"),
   description: z.string().min(10, "Description must be at least 10 characters"),
   file: z.instanceof(File).refine(file => file.size > 0, "Please select a file")
 });
@@ -17,10 +17,7 @@ export const contactFormSchema = z.object({
   isPropertyOwner: z.boolean().default(false),
 });
 
-export const newsletterSchema = z.object({
-  email: z.string().email("Please enter a valid email address"),
-});
 
-export type DocumentUploadFormValues = z.infer<typeof documentUploadSchema>;
+
+export type recordUploadFormValues = z.infer<typeof recordUploadSchema>;
 export type ContactFormValues = z.infer<typeof contactFormSchema>;
-export type NewsletterFormValues = z.infer<typeof newsletterSchema>;

@@ -6,7 +6,6 @@ import { useMutation } from "@tanstack/react-query";
 import { CloudUpload, Upload } from "lucide-react";
 import { queryClient } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
-import { insertDocumentSchema } from "@shared/schema";
 import { apiRequest } from "@/lib/queryClient";
 import {
   Form,
@@ -162,7 +161,7 @@ export default function RecordUpload({ accessLevel = 'admin' }: RecordUploadProp
                 <SelectContent>
                   <SelectItem value="agreement">Agreement</SelectItem>
                   <SelectItem value="bylaw">Bylaw</SelectItem>
-                  <SelectItem value="financial">Financial Document</SelectItem>
+                  <SelectItem value="financial">Financial </SelectItem>
                   <SelectItem value="minutes">Meeting Minutes</SelectItem>
                   <SelectItem value="map">Property Map</SelectItem>
                   <SelectItem value="schedule">Schedule</SelectItem>

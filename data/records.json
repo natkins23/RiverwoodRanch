@@ -1,0 +1,57 @@
+[
+  {
+    "id": 1,
+    "title": "Annual HOA Meeting Minutes",
+    "type": "minutes",
+    "description": "Minutes from the annual homeowners association meeting",
+    "fileName": "annual_meeting_minutes.pdf",
+    "fileContent": "https://placeholder-recs.example/annual_meeting_minutes.pdf",
+    "uploadDate": "2025-04-15T16:21:36.746Z",
+    "visibility": "public",
+    "archived": false
+  },
+  {
+    "id": 2,
+    "title": "Ranch Bylaws Record",
+    "type": "bylaw",
+    "description": "Official bylaws for Riverwood Ranch",
+    "fileName": "ranch_bylaws.pdf",
+    "fileContent": "https://placeholder-recs.example/ranch_bylaws.pdf",
+    "uploadDate": "2025-04-15T16:21:36.746Z",
+    "visibility": "protected",
+    "archived": false
+  },
+  {
+    "id": 3,
+    "title": "Property Map",
+    "type": "map",
+    "description": "Map of all properties in the Riverwood Ranch community",
+    "fileName": "property_map.pdf",
+    "fileContent": "https://placeholder-recs.example/property_map.pdf",
+    "uploadDate": "2025-04-15T16:21:36.746Z",
+    "visibility": "public",
+    "archived": false
+  },
+  {
+    "id": 4,
+    "title": "Financial Statement 2023",
+    "type": "financial",
+    "description": "Annual financial statement for the year 2023",
+    "fileName": "financial_2023.pdf",
+    "fileContent": "https://placeholder-recs.example/financial_2023.pdf",
+    "uploadDate": "2025-04-15T16:21:36.746Z",
+    "visibility": "admin",
+    "archived": false
+  },
+  {
+    "id": 5,
+    "title": "Community Event Schedule",
+    "type": "schedule",
+    "description": "Schedule of upcoming community events",
+    "fileName": "event_schedule.pdf",
+    "fileContent": "https://placeholder-recs.example/event_schedule.pdf",
+    "uploadDate": "2025-04-15T16:21:36.746Z",
+    "visibility": "public",
+    "archived": false
+  }
+]

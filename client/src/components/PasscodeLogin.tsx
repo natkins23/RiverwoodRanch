@@ -70,8 +70,8 @@ export default function PasscodeLogin({ onSuccess }: PasscodeLoginProps) {
             ? "Welcome, Board Member" 
             : "Welcome",
           description: accessLevel === "admin"
-            ? "You now have access to all documents and features."
-            : "You now have access to protected documents.",
+            ? "Access to all records and record creation."
+            : "Access to protected records.",
         });
       } else {
         toast({

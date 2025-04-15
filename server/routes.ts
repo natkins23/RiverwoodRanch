@@ -1,10 +1,27 @@
+/**
+ * Registers all `/api` routes for backend data operations including document management,
+ * board member updates, contact form submissions, newsletter subscriptions, and PIN validation.
+ *
+ * Key responsibilities:
+ * - Exposes REST API endpoints to:
+ *   - List, upload, archive, and delete document records
+ *   - Retrieve and update board member information
+ *   - Submit contact form data
+ *   - Handle newsletter subscriptions
+ *   - Validate user/admin PIN codes
+ * - Validates inputs using Zod schemas and handles errors gracefully
+ * - Uses `multer` for in-memory file uploads and saves files to Firebase Storage
+ * - Implements fallback PIN logic in case Firestore is unavailable
+ */
+
+
+
 import type { Express, Request, Response, NextFunction } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { 
-  insertDocumentSchema, 
+  insertRecordSchema, 
   insertContactSchema, 
-  insertNewsletterSchema 
 } from "@shared/schema";
 import { z } from "zod";
 import { Timestamp } from "firebase-admin/firestore";
@@ -21,9 +38,9 @@ const upload = multer({
     fileSize: 25 * 1024 * 1024, // 25MB limit
   },
   fileFilter: (req, file, callback) => {
-    // Allow documents and image formats
+    // Allow records and image formats
     const allowedTypes = [
-      // Document formats
+      // record formats
       'application/pdf', 
       'application/msword',
       'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
@@ -44,7 +61,7 @@ const upload = multer({
     if (allowedTypes.includes(file.mimetype)) {
       callback(null, true);
     } else {
-      callback(new Error('File type not allowed. Allowed types: documents and images.'));
+      callback(new Error('Record file type not allowed. Allowed types: documents and images.'));
     }
   }
 });
@@ -65,15 +82,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
       
       // Always get records from storage even if Firebase sync fails
-      // The storage.getAllDocuments method will ensure we have sample records
+      // The storage.getAllRecords method will ensure we have sample records
       // even if none exist in the storage
-      const records = await storage.getAllDocuments();
+      const records = await storage.getAllRecords();
       
       // Always return something to the client
       if (!records || records.length === 0) {
         console.log("No records found. Creating fallback records.");
-        await storage.createSampleDocuments();
-        const fallbackRecords = await storage.getAllDocuments();
+        await storage.createSampleRecords();
+        const fallbackRecords = await storage.getAllRecords();
         return res.json(fallbackRecords);
       }
       
@@ -84,8 +101,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Create sample records as a last resort and return them
       try {
         console.log("Creating fallback records due to error.");
-        await storage.createSampleDocuments();
-        const fallbackRecords = await storage.getAllDocuments();
+        await storage.createSampleRecords();
+        const fallbackRecords = await storage.getAllRecords();
         return res.json(fallbackRecords);
       } catch (fallbackError) {
         console.error("Even fallback creation failed:", fallbackError);
@@ -98,13 +115,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get("/api/records/:id", async (req: Request, res: Response) => {
     try {
       const id = parseInt(req.params.id);
-      const document = await storage.getDocumentById(id);
+      const record = await storage.getRecordById(id);
 
-      if (!document) {
+      if (!record) {
         return res.status(404).json({ message: "Record not found" });
       }
 
-      res.json(document);
+      res.json(record);
     } catch (error) {
       console.error("Error fetching record:", error);
       res.status(500).json({ message: "Failed to fetch record" });
@@ -128,7 +145,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Create a unique filename
       const timestamp = Date.now();
       const fileName = `${timestamp}-${file.originalname.replace(/\s+/g, "_")}`;
-      const filePath = `documents/${fileName}`;
+      const filePath = `records/${fileName}`;
       
       // Create a new blob in the bucket
       const blob = bucket.file(filePath);
@@ -178,12 +195,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
         visibility: visibility || "public" // Set visibility with default as public
       };
 
-      const validatedData = insertDocumentSchema.parse(recordData);
+      const validatedData = insertRecordSchema.parse(recordData);
 
       // Create the record
-      const newDocument = await storage.createDocument(validatedData);
+      const newRecord = await storage.createRecord(validatedData);
 
-      res.status(201).json(newDocument);
+      res.status(201).json(newRecord);
     } catch (error) {
       if (error instanceof z.ZodError) {
         return res.status(400).json({ message: "Invalid record data", errors: error.errors });
@@ -204,13 +221,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(400).json({ message: "Archive status must be a boolean" });
       }
       
-      const document = await storage.updateDocumentArchiveStatus(id, archived);
+      const record = await storage.updateRecordArchiveStatus(id, archived);
       
-      if (!document) {
+      if (!record) {
         return res.status(404).json({ message: "Record not found" });
       }
       
-      res.json(document);
+      res.json(record);
     } catch (error) {
       console.error("Error updating record archive status:", error);
       res.status(500).json({ message: "Failed to update record archive status" });
@@ -223,16 +240,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const id = parseInt(req.params.id);
       
       // Get the record before deleting it
-      const document = await storage.getDocumentById(id);
-      if (!document) {
+      const record = await storage.getRecordById(id);
+      if (!record) {
         return res.status(404).json({ message: "Record not found" });
       }
       
       // Save the URL to prevent re-syncing this file
-      const fileContent = document.fileContent;
+      const fileContent = record.fileContent;
       
       // Delete from our storage
-      const success = await storage.deleteDocument(id);
+      const success = await storage.deleteRecord(id);
       
       if (!success) {
         return res.status(404).json({ message: "Record deletion failed" });
@@ -292,23 +309,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Subscribe to newsletter
-  app.post("/api/newsletter", async (req: Request, res: Response) => {
-    try {
-      const validatedData = insertNewsletterSchema.parse(req.body);
-
-      const newSubscription = await storage.createNewsletterSubscription(validatedData);
-
-      res.status(201).json({ message: "Subscribed to newsletter successfully", id: newSubscription.id });
-    } catch (error) {
-      if (error instanceof z.ZodError) {
-        return res.status(400).json({ message: "Invalid email address", errors: error.errors });
-      }
-
-      console.error("Error subscribing to newsletter:", error);
-      res.status(500).json({ message: "Failed to subscribe to newsletter" });
-    }
-  });
+  
   
   // PIN Validation schema
   const pinValidationSchema = z.object({
@@ -353,7 +354,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           });
         }
         
-        // Get the PIN document
+        // Get the PIN record
         const pinDoc = pinSnapshot.docs[0];
         const pinData = pinDoc.data();
         

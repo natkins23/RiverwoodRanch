@@ -16,8 +16,8 @@ export const insertUserSchema = createInsertSchema(users).pick({
 export type InsertUser = z.infer<typeof insertUserSchema>;
 export type User = typeof users.$inferSelect;
 
-// Document schema
-export const documents = pgTable("documents", {
+// Record schema
+export const records = pgTable("records", {
   id: serial("id").primaryKey(),
   title: text("title").notNull(),
   type: text("type").notNull(),
@@ -29,13 +29,13 @@ export const documents = pgTable("documents", {
   archived: boolean("archived").notNull().default(false) // set by admin //viewable by users // hidden from public
 });
 
-export const insertDocumentSchema = createInsertSchema(documents).omit({
+export const insertRecordSchema = createInsertSchema(records).omit({
   id: true,
   uploadDate: true,
 });
 
-export type InsertDocument = z.infer<typeof insertDocumentSchema>;
-export type Document = typeof documents.$inferSelect;
+export type InsertRecord = z.infer<typeof insertRecordSchema>;
+export type Record = typeof records.$inferSelect;
 
 // Board member schema
 export const boardMembers = pgTable("board_members", {
@@ -75,18 +75,3 @@ export const insertContactSchema = createInsertSchema(contactSubmissions).omit({
 export type InsertContact = z.infer<typeof insertContactSchema>;
 export type ContactSubmission = typeof contactSubmissions.$inferSelect;
 
-// Newsletter subscription schema
-export const newsletterSubscriptions = pgTable("newsletter_subscriptions", {
-  id: serial("id").primaryKey(),
-  email: text("email").notNull().unique(),
-  subscriptionDate: timestamp("subscription_date").notNull().defaultNow(),
-  joinEmailChain: boolean("join_email_chain").notNull().default(false),
-});
-
-export const insertNewsletterSchema = createInsertSchema(newsletterSubscriptions).omit({
-  id: true,
-  subscriptionDate: true,
-});
-
-export type InsertNewsletter = z.infer<typeof insertNewsletterSchema>;
-export type NewsletterSubscription = typeof newsletterSubscriptions.$inferSelect;

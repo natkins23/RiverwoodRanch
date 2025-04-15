@@ -6,7 +6,7 @@ import { useMutation } from "@tanstack/react-query";
 import { RectangleEllipsis, Phone, Calendar, AlertCircle, MapPin } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
-import { insertContactSchema, insertNewsletterSchema } from "@shared/schema";
+import { insertContactSchema, } from "@shared/schema";
 import {
   Form,
   FormControl,
@@ -36,12 +36,9 @@ const contactFormSchema = insertContactSchema.extend({
   message: z.string().min(10, "Message must be at least 10 characters"),
 });
 
-const newsletterSchema = insertNewsletterSchema.extend({
-  email: z.string().email("Please enter a valid email address"),
-});
+
 
 type ContactFormValues = z.infer<typeof contactFormSchema>;
-type NewsletterFormValues = z.infer<typeof newsletterSchema>;
 
 export default function Contact() {
   const { toast } = useToast();
@@ -83,39 +80,6 @@ export default function Contact() {
   
   const onContactSubmit = (data: ContactFormValues) => {
     contactMutation.mutate(data);
-  };
-  
-  // Newsletter form
-  const newsletterForm = useForm<NewsletterFormValues>({
-    resolver: zodResolver(newsletterSchema),
-    defaultValues: {
-      email: "",
-    },
-  });
-  
-  const newsletterMutation = useMutation({
-    mutationFn: async (data: NewsletterFormValues) => {
-      const response = await apiRequest("POST", "/api/newsletter", data);
-      return response.json();
-    },
-    onSuccess: () => {
-      newsletterForm.reset();
-      toast({
-        title: "Subscribed",
-        description: "You've been subscribed to our newsletter successfully.",
-      });
-    },
-    onError: (error) => {
-      toast({
-        title: "Failed to subscribe",
-        description: error.message || "Something went wrong. Please try again.",
-        variant: "destructive",
-      });
-    }
-  });
-  
-  const onNewsletterSubmit = (data: NewsletterFormValues) => {
-    newsletterMutation.mutate(data);
   };
 
   return (
@@ -216,7 +180,7 @@ export default function Contact() {
                         </FormControl>
                         <SelectContent>
                           <SelectItem value="road_maintenance">Road Maintenance</SelectItem>
-                          <SelectItem value="documents">Documents & Records</SelectItem>
+                          <SelectItem value="records">Documents & Records</SelectItem>
                           <SelectItem value="payments">Dues & Payments</SelectItem>
                           <SelectItem value="property">Property Inquiries</SelectItem>
                           <SelectItem value="board">Board Matters</SelectItem>

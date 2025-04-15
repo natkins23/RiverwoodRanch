@@ -449,12 +449,12 @@ export default function RanchPortal() {
                 </div>
               </div>
 
-              {/* Documents Section */}
+              {/* Records Section */}
               <div className="bg-white rounded-lg shadow-md p-6 md:col-span-2">
                 <div className="flex items-center justify-between mb-6">
                   <div className="flex items-center">
                     <FileText className="h-6 w-6 text-[#2C5E1A] mr-3" />
-                    <h2 className="text-xl font-semibold">Documents</h2>
+                    <h2 className="text-xl font-semibold">Records</h2>
                   </div>
                   <Button
                     className="bg-[#2C5E1A] hover:bg-[#4C8033] text-white"
