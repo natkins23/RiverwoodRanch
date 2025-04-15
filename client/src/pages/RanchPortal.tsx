@@ -8,6 +8,7 @@ import ScrollToTop from "@/components/ScrollToTop";
 import { Button } from "@/components/ui/button";
 import { useLocation } from "wouter";
 import { useEffect, useState } from "react";
+import { getBaseApiUrl } from "@/lib/utils";
 import {
   Dialog,
   DialogContent,
@@ -398,7 +399,8 @@ export default function RanchPortal() {
                             </DialogClose>
                             <Button onClick={async () => {
                               try {
-                                await fetch('/api/board-members', {
+                                const baseApiUrl = getBaseApiUrl();
+                                await fetch(`${baseApiUrl}/api/board-members`, {
                                   method: 'PUT',
                                   headers: { 'Content-Type': 'application/json' },
                                   body: JSON.stringify(boardMembers)

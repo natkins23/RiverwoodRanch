@@ -2,6 +2,8 @@
 // This file provides type definitions and API client functions
 // We're not directly using Firebase client-side to avoid exposing API keys
 
+import { getBaseApiUrl } from "@/lib/utils";
+
 // Event types
 export interface Event {
   id: string;
@@ -15,7 +17,8 @@ export interface Event {
 
 // Create a new event
 export const createEvent = async (eventData: Omit<Event, "id" | "createdAt">) => {
-  const response = await fetch('/api/events', {
+  const baseApiUrl = getBaseApiUrl();
+  const response = await fetch(`${baseApiUrl}/api/events`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
