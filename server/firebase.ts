@@ -6,16 +6,18 @@ dotenv.config();
 
 const firebaseConfig = {
   credential: cert({
-    projectId: process.env.FIREBASE_PROJECT_ID,
-    clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
-    privateKey: process.env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, '\n'),
-  }),
+    type: 'service_account',
+    project_id: process.env.FIREBASE_PROJECT_ID,
+    client_email: process.env.FIREBASE_CLIENT_EMAIL,
+    private_key: process.env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, '\n'),
+    token_uri: 'https://oauth2.googleapis.com/token',
+  } as any),
   storageBucket: process.env.FIREBASE_STORAGE_BUCKET,
 };
 
-// Initialize Firebase Admin
 const app = initializeApp(firebaseConfig);
 const bucket = getStorage().bucket();
 const db = getFirestore();
 
 export { bucket, db };
+  

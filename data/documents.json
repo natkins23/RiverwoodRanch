@@ -1,35 +1,24 @@
 [
   {
-    "title": "meeting minutes",
+    "id": 1,
+    "title": "Sample Minutes",
     "type": "minutes",
-    "description": "testtttttttttttttttttttttttttttttttt",
-    "fileName": "test.pdf",
-    "fileContent": "https://storage.googleapis.com/riverwood-c3409.firebasestorage.app/documents/1744100261427-test.pdf",
-    "visibility": "protected",
-    "id": 18,
-    "uploadDate": "2025-04-08T08:17:42.067Z",
-    "archived": false
-  },
-  {
-    "id": 19,
-    "title": "BYLAWS Approved Version February152017",
-    "type": "other",
-    "description": "Uploaded on 4/8/2025",
-    "fileName": "BYLAWS Approved Version February152017.docx",
-    "fileContent": "https://storage.googleapis.com/riverwood-c3409.firebasestorage.app/documents/1744134457350-BYLAWS_Approved_Version_February152017.docx",
-    "uploadDate": "2025-04-08T17:47:38.001Z",
+    "description": "Example document",
+    "fileName": "minutes_sample.pdf",
+    "fileContent": "https://placeholder.example/minutes_sample.pdf",
+    "uploadDate": "2025-04-15T06:40:55.965Z",
     "visibility": "public",
     "archived": false
   },
   {
-    "title": "testttestttestt",
-    "type": "bylaw",
-    "description": "testttestttestttestt",
-    "fileName": "Policy Concerning Payment of the Legally Required Assessment Fees.docx",
-    "fileContent": "https://storage.googleapis.com/riverwood-c3409.firebasestorage.app/documents/1744217408195-Policy_Concerning_Payment_of_the_Legally_Required_Assessment_Fees.docx",
-    "visibility": "admin",
-    "id": 20,
-    "uploadDate": "2025-04-09T16:50:08.879Z",
+    "id": 2,
+    "title": "Sample Map",
+    "type": "map",
+    "description": "Example document",
+    "fileName": "map_sample.pdf",
+    "fileContent": "https://placeholder.example/map_sample.pdf",
+    "uploadDate": "2025-04-15T06:40:55.965Z",
+    "visibility": "public",
     "archived": false
   }
 ]

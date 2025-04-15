@@ -4,7 +4,6 @@ import themePlugin from "@replit/vite-plugin-shadcn-theme-json";
 import path from "path";
 import runtimeErrorOverlay from "@replit/vite-plugin-runtime-error-modal";
 
-// Needed for top-level await
 const cartographerPlugin =
   process.env.NODE_ENV !== "production" && process.env.REPL_ID !== undefined
     ? [
@@ -34,13 +33,13 @@ export default defineConfig({
     emptyOutDir: true,
   },
   server: {
-    host: "0.0.0.0", // Required on Replit for public access
+    host: "0.0.0.0",
     watch: {
-      usePolling: true, // Ensures file change detection in cloud/dev envs
+      usePolling: true,
     },
     proxy: {
       "/api": {
-        target: "http://127.0.0.1:5000", // Force IPv4
+        target: "http://127.0.0.1:5000",
         changeOrigin: true,
       },
     },
