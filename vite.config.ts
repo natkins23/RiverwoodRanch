@@ -45,6 +45,7 @@ export default defineConfig({
     },
     allowedHosts: [
       "5610fe83-a169-4adb-a5a6-a905b1df0192-00-2jecbczicnbhq.picard.replit.dev",
+      "7906e7d3-b4c3-435a-b6f7-10fed4d38a2d-00-sukxhwoxdnro.janeway.replit.dev",
     ],
   },
 });
